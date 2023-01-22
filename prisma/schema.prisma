@@ -11,6 +11,15 @@ generator client {
   output   = "./src/generated/client"
 }
 
+model User {
+  //change id line to "String   @id @default(auto()) @map("_id") @db.ObjectId"
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  username String @unique
+  name String
+  password String
+  //messages Message[]
+}
+
 model Message {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
   text  String
@@ -19,5 +28,7 @@ model Message {
   // This is unique so it can be used for cursor-based pagination
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  //createdBy User @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
   hasImage Boolean @default(false)
 }

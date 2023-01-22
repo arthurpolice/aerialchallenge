@@ -1,9 +1,8 @@
 import { trpc } from '../utils/trpc';
-import { NextPageWithLayout } from './_app';
-import { useState } from 'react';
-import type { AppRouter } from '~/server/routers/_app';
+import { useEffect, useState } from 'react';
+import LoginPage from '~/components/LoginPage';
 
-const IndexPage: NextPageWithLayout = () => {
+const IndexPage = () => {
   const utils = trpc.useContext();
   const messageQuery = trpc.message.list.useInfiniteQuery(
     {
@@ -23,22 +22,10 @@ const IndexPage: NextPageWithLayout = () => {
     },
   });
 
-  // prefetch all posts for instant navigation
-  // useEffect(() => {
-  //   const allPosts = postsQuery.data?.pages.flatMap((page) => page.items) ?? [];
-  //   for (const { id } of allPosts) {
-  //     void utils.post.byId.prefetch({ id });
-  //   }
-  // }, [postsQuery.data, utils]);
   const [message, setMessage] = useState('')
 
   return (
-    <>
-      <input type={'text'} onChange={(ev) => setMessage(ev.target.value)}/>
-      <button onClick={() => addMessage.mutate({
-        text: message
-      })}>Send</button>
-    </>
+    <LoginPage/>
   )
 };
 
