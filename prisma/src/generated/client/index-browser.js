@@ -108,6 +108,12 @@ exports.Prisma.SortOrder = makeEnum({
   desc: 'desc'
 });
 
+exports.Prisma.TokenScalarFieldEnum = makeEnum({
+  id: 'id',
+  userId: 'userId',
+  createdAt: 'createdAt'
+});
+
 exports.Prisma.UserScalarFieldEnum = makeEnum({
   id: 'id',
   username: 'username',
@@ -118,7 +124,8 @@ exports.Prisma.UserScalarFieldEnum = makeEnum({
 
 exports.Prisma.ModelName = makeEnum({
   User: 'User',
-  Message: 'Message'
+  Message: 'Message',
+  Token: 'Token'
 });
 
 /**

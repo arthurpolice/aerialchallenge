@@ -9,13 +9,12 @@ const prisma = new PrismaClient()
 export const userRouter = router({
   register: publicProcedure
     .input(z.object({
-      id: z.string().uuid().optional(),
       username: z.string().min(6),
       name: z.string(),
       password: z.string().min(8),
     }))
     .mutation(async ({ input }) => {
-      await prisma.user.create({
+      const response = await prisma.user.create({
         data: input
       })
     }),

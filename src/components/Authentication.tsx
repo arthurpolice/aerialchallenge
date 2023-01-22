@@ -17,10 +17,12 @@ import { trpc } from '~/utils/trpc';
 import { useState } from 'react';
 
 export function AuthenticationForm(props: PaperProps) {
-  const mutation = trpc.user.register.useMutation()
+  const utils = trpc.useContext();
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   let user = trpc.user.login.useQuery({username: username, password: password})
+  const registerUser = trpc.user.register.useMutation()
+
   const [type, toggle] = useToggle(['login', 'register']);
   const form = useForm({
     initialValues: {
@@ -47,14 +49,21 @@ export function AuthenticationForm(props: PaperProps) {
     terms?: boolean
   }
 
-  const handleSubmit = (values: Values) => {
+  const handleSubmit = async (values: Values) => {
     if (type !== 'login') {
-      const submit = mutation.mutate({
-        name: values.name,
-        username: values.username,
-        password: values.password,
-      })
-      console.log(submit)
+      try {
+        await registerUser.mutateAsync({
+          name: values.name,
+          username: values.username,
+          password: values.password,
+        })
+        setUsername(values.username)
+        setPassword(values.password)
+        user.refetch()
+      }
+      catch {
+        console.log('Could not register')
+      }
     }
     else {
       setUsername(values.username)
