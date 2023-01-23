@@ -4,35 +4,36 @@ import { PrismaClient } from '../../../prisma/src/generated/client';
 import { TRPCError } from '@trpc/server';
 import { optional, z } from 'zod';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 export const userRouter = router({
   register: publicProcedure
-    .input(z.object({
-      username: z.string().min(6),
-      name: z.string(),
-      password: z.string().min(8),
-    }))
+    .input(
+      z.object({
+        username: z.string().min(6),
+        name: z.string(),
+        password: z.string().min(8),
+      }),
+    )
     .mutation(async ({ input }) => {
       const response = await prisma.user.create({
-        data: input
-      })
+        data: input,
+      });
     }),
   login: publicProcedure
-    .input(z.object({
-      username: z.string(),
-      password: z.string()
-    }))
+    .input(
+      z.object({
+        username: z.string(),
+        password: z.string(),
+      }),
+    )
     .query(async ({ input }) => {
       const user = await prisma.user.findFirstOrThrow({
         where: {
           username: input.username,
-          password: input.password
-        }
-      })
-
-      if (user) {
-        return user
-      }
-    })
-})
+          password: input.password,
+        },
+      });
+      return user;
+    }),
+});

@@ -1,5 +1,6 @@
 import { Paper, createStyles } from '@mantine/core';
 import { AuthenticationForm } from './Authentication';
+import React, { SetStateAction } from 'react';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -39,12 +40,16 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function LoginPage() {
+interface LoginProps {
+  setFunction: React.Dispatch<SetStateAction<string>>;
+}
+
+export default function LoginPage({ setFunction }: LoginProps) {
   const { classes } = useStyles();
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30}>
-        <AuthenticationForm />
+        <AuthenticationForm setFunction={setFunction} />
       </Paper>
     </div>
   );

@@ -21,7 +21,7 @@ const defaultMessageSelect = Prisma.validator<Prisma.MessageSelect>()({
   hasImage: true,
 });
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 export const msgRouter = router({
   list: publicProcedure
@@ -75,7 +75,7 @@ export const msgRouter = router({
         id: z.string().uuid().optional(),
         text: z.string().min(1),
         hasImage: z.boolean().optional(),
-        userId: z.string()
+        userId: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
@@ -85,15 +85,11 @@ export const msgRouter = router({
       });
       return message;
     }),
-  delete: publicProcedure
-    .input(
-      z.string()
-    )
-    .mutation(async ({ input }) => {
-      await prisma.message.delete({
-        where: {
-          id: input
-        }
-      })
-    })
+  delete: publicProcedure.input(z.string()).mutation(async ({ input }) => {
+    await prisma.message.delete({
+      where: {
+        id: input,
+      },
+    });
+  }),
 });

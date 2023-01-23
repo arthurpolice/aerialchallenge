@@ -14,14 +14,19 @@ import {
   Stack,
 } from '@mantine/core';
 import { trpc } from '~/utils/trpc';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
+import { setCookie } from 'nookies';
 
-export function AuthenticationForm(props: PaperProps) {
+interface LoginProps {
+  setFunction: React.Dispatch<SetStateAction<string>>;
+}
+
+export function AuthenticationForm(
+  { setFunction }: LoginProps,
+  props: PaperProps,
+) {
+  const registerUser = trpc.user.register.useMutation();
   const utils = trpc.useContext();
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  let user = trpc.user.login.useQuery({username: username, password: password})
-  const registerUser = trpc.user.register.useMutation()
 
   const [type, toggle] = useToggle(['login', 'register']);
   const form = useForm({
@@ -31,47 +36,53 @@ export function AuthenticationForm(props: PaperProps) {
       password: '',
       terms: true,
     },
-
+    // Fix the terms validation
     validate: {
       password: (val) =>
         val.length <= 6
           ? 'Password should include at least 6 characters'
           : null,
-      terms: (val) =>
-        val?null:'You must agree to the terms of service',
+      terms: (val) => (val ? null : 'You must agree to the terms of service'),
     },
   });
 
   interface Values {
-    username: string,
-    name: string,
-    password: string,
-    terms?: boolean
+    username: string;
+    name: string;
+    password: string;
+    terms?: boolean;
   }
 
   const handleSubmit = async (values: Values) => {
+    let id;
     if (type !== 'login') {
       try {
         await registerUser.mutateAsync({
           name: values.name,
           username: values.username,
           password: values.password,
-        })
-        setUsername(values.username)
-        setPassword(values.password)
-        user.refetch()
+        });
+        const user = await utils.user.login.fetch({
+          username: values.username,
+          password: values.password,
+        });
+        user.id ? (id = user.id) : (id = null);
+      } catch {
+        console.log('Could not register');
       }
-      catch {
-        console.log('Could not register')
-      }
+    } else {
+      const user = await utils.user.login.fetch({
+        username: values.username,
+        password: values.password,
+      });
+      user.id ? (id = user.id) : (id = null);
     }
-    else {
-      setUsername(values.username)
-      setPassword(values.password)
-      user.refetch()
-      console.log(user)
+    if (id) {
+      const cookie = setCookie(null, 'user_id', id, {
+        maxAge: 24 * 60 * 60,
+      });
     }
-  }
+  };
   return (
     <Paper radius="md" p="xl" withBorder {...props}>
       <Text size="lg" weight={500}>
@@ -80,7 +91,11 @@ export function AuthenticationForm(props: PaperProps) {
 
       <Divider label="Continue with username" labelPosition="center" my="lg" />
 
-      <form onSubmit={form.onSubmit((values) => {handleSubmit(values)})}>
+      <form
+        onSubmit={form.onSubmit((values) => {
+          handleSubmit(values);
+        })}
+      >
         <Stack>
           {type === 'register' && (
             <TextInput
