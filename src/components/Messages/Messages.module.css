@@ -1,0 +1,28 @@
+.root {
+  display: flex;
+  justify-content: center;
+}
+.main {
+  width: 60%;
+  height: 90vh;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--white-rgb),.16) transparent;
+}
+
+.main::-webkit-scrollbar {
+  display: none;
+}
+
+.message {
+  border-radius: 5px;
+  font-size: 14px;
+  width: 50vw;
+}
+
+@media screen and (max-width: 900px) {
+  .main {
+    width: 100vw;
+  }
+}

@@ -1,8 +1,9 @@
-import { useState } from 'react';
 import { trpc } from '~/utils/trpc';
+import { ChatInput } from './ChatInput/ChatInput';
+import Messages from './Messages/Messages';
+import styles from './Messages/Messages.module.css'
 
 export default function ChatPage() {
-  const utils = trpc.useContext();
   const messageQuery = trpc.message.list.useInfiniteQuery(
     {
       limit: 20,
@@ -14,13 +15,14 @@ export default function ChatPage() {
     },
   );
 
-  const addMessage = trpc.message.add.useMutation({
-    async onSuccess() {
-      // refetches messages after a post is added
-      await utils.message.list.invalidate();
-    },
-  });
-  const [message, setMessage] = useState('');
-
-  return <p>Hello World</p>;
+  return (
+    <>
+      <div className={styles.root}>
+        {messageQuery.data?.pages.map((page, index) => {
+          return <Messages key={index} list={page.items} />;
+        })}
+      </div>
+      <ChatInput />
+    </>
+  );
 }

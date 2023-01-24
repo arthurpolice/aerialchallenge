@@ -2,6 +2,8 @@ import type { AppProps } from 'next/app';
 import { trpc } from '~/utils/trpc';
 import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
+import '../styles/MessageBox.css';
+import '../styles/PhotoMessage.css';
 
 const MyApp = (props: AppProps) => {
   const { Component, pageProps } = props;

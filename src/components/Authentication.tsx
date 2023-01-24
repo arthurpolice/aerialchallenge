@@ -14,7 +14,7 @@ import {
   Stack,
 } from '@mantine/core';
 import { trpc } from '~/utils/trpc';
-import { SetStateAction, useState } from 'react';
+import { SetStateAction } from 'react';
 import { setCookie } from 'nookies';
 
 interface LoginProps {
@@ -78,9 +78,10 @@ export function AuthenticationForm(
       user.id ? (id = user.id) : (id = null);
     }
     if (id) {
-      const cookie = setCookie(null, 'user_id', id, {
+      setCookie(null, 'user_id', id, {
         maxAge: 24 * 60 * 60,
       });
+      setFunction('chat');
     }
   };
   return (

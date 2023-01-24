@@ -1,0 +1,24 @@
+.input {
+  width: 50%;
+}
+
+.inputConsole {
+  display: flex;
+  justify-content: center;
+}
+
+.smile {
+  font-size: 1.5rem;
+}
+
+.buttons {
+  display: flex;
+  background-color: #228be6;
+  border-radius: 50px;
+}
+
+@media screen and (max-width: 900px) {
+  .input {
+    width: 90vw;
+  }
+}
