@@ -10,10 +10,17 @@ interface Message {
   text: string;
   createdAt: Date;
   updatedAt: Date;
-  userId: string;
 }
 
-export default function MessageRow({ message }: { message: Message }) {
+interface Props {
+  message: Message;
+  autoScroll: () => void;
+}
+
+export default function MessageRow({
+  message,
+  autoScroll,
+}: Props): JSX.Element | undefined {
   const cookies = parseCookies();
   const cookiesId = cookies.user_id;
   const senderId = message.createdBy.id;
@@ -26,6 +33,11 @@ export default function MessageRow({ message }: { message: Message }) {
       setDirection('left');
     }
   }, [senderId, cookiesId]);
+
+  useEffect(() => {
+    autoScroll();
+  });
+
   if (direction !== '') {
     return (
       <div className={styles.message}>

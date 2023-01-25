@@ -16,12 +16,12 @@ import { trpc } from '~/utils/trpc';
 import { SetStateAction, useState } from 'react';
 import { parseCookies } from 'nookies';
 
-interface ModeProps {
+interface HookProps {
   setFunction: React.Dispatch<SetStateAction<string>>;
 }
 
 export default function ChatInput(
-  { setFunction }: ModeProps,
+  { setFunction }: HookProps,
   props: TextInputProps,
 ) {
   library.add(faPaperPlane, faPlus, faSmileBeam);
@@ -38,13 +38,14 @@ export default function ChatInput(
   });
   const [message, setMessage] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (userId) {
-      addMessage.mutateAsync({
+      await addMessage.mutateAsync({
         hasImage: false,
         text: message,
         userId: userId,
       });
+      setMessage('');
     } else {
       setFunction('login');
     }
@@ -56,6 +57,7 @@ export default function ChatInput(
         className={styles.input}
         radius="xl"
         size="sm"
+        value={message}
         onInput={(e) => setMessage(e.currentTarget.value)}
         rightSection={
           <div className={styles.buttons}>

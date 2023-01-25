@@ -1,4 +1,4 @@
-import { SetStateAction } from 'react';
+import React, { SetStateAction, useRef } from 'react';
 import { trpc } from '~/utils/trpc';
 import ChatInput from './ChatInput/ChatInput';
 import Messages from './Messages/Messages';
@@ -22,28 +22,39 @@ export default function ChatPage({
   );
 
   const getNextPage = () => {
-    return messageQuery.fetchPreviousPage();
+    messageQuery.fetchPreviousPage();
+  };
+
+  const dummy = useRef<HTMLDivElement>(null);
+  const autoScroll = () => {
+    if (dummy.current != null) {
+      dummy.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
     <>
       <div className={styles.root}>
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={getNextPage}
-          hasMore={true || false}
-          loader={
-            <div className="loader" key={0}>
-              Loading ...
-            </div>
-          }
-          useWindow={true}
-          isReverse={true}
-        >
-          {messageQuery.data?.pages.map((page, index) => {
-            return <Messages key={index} list={page.items} />;
-          })}
-        </InfiniteScroll>
+        <div className={styles.main}>
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={getNextPage}
+            hasMore={true || false}
+            useWindow={true}
+            isReverse={true}
+          >
+            {messageQuery.data?.pages.map((page, index) => {
+              return (
+                <Messages
+                  key={index}
+                  list={page.items}
+                  autoScroll={autoScroll}
+                />
+              );
+            })}
+            <div ref={dummy}></div>
+          </InfiniteScroll>
+        </div>
       </div>
       <ChatInput setFunction={setFunction} />
     </>

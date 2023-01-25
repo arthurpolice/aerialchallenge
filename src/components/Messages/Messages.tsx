@@ -1,7 +1,7 @@
+import { useEffect } from 'react';
 import MessageRow from './MessageRow';
-import styles from './Messages.module.css';
-
 interface Message {
+  createdBy: any;
   id: string;
   hasImage: boolean;
   text: string;
@@ -9,11 +9,22 @@ interface Message {
   updatedAt: Date;
 }
 
-export default function Messages({ list }: { list: Message[] }) {
+interface Props {
+  list: Message[];
+  autoScroll: () => void;
+}
+
+export default function Messages({ list, autoScroll }: Props) {
   return (
-    <div className={styles.main}>
+    <div>
       {list.map((message: Message) => {
-        return <MessageRow key={message.id} message={message} />;
+        return (
+          <MessageRow
+            key={message.id}
+            message={message}
+            autoScroll={autoScroll}
+          />
+        );
       })}
     </div>
   );
