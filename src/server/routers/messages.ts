@@ -19,6 +19,7 @@ const defaultMessageSelect = Prisma.validator<Prisma.MessageSelect>()({
   createdAt: true,
   updatedAt: true,
   hasImage: true,
+  createdBy: true,
 });
 
 const prisma = new PrismaClient();

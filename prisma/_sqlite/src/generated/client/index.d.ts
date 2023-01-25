@@ -32,7 +32,7 @@ export type Message = {
   text: string
   createdAt: Date
   updatedAt: Date
-  userId: string | null
+  userId: string
   hasImage: boolean
 }
 
@@ -815,6 +815,48 @@ export namespace Prisma {
    */
 
 
+  /**
+   * Count Type UserCountOutputType
+   */
+
+
+  export type UserCountOutputType = {
+    messages: number
+  }
+
+  export type UserCountOutputTypeSelect = {
+    messages?: boolean
+  }
+
+  export type UserCountOutputTypeGetPayload<S extends boolean | null | undefined | UserCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? UserCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (UserCountOutputTypeArgs)
+    ? UserCountOutputType 
+    : S extends { select: any } & (UserCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof UserCountOutputType ? UserCountOutputType[P] : never
+  } 
+      : UserCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect | null
+  }
+
+
 
   /**
    * Models
@@ -977,20 +1019,32 @@ export namespace Prisma {
     id?: boolean
     username?: boolean
     name?: boolean
+    messages?: boolean | User$messagesArgs
     password?: boolean
+    _count?: boolean | UserCountOutputTypeArgs
   }
 
+
+  export type UserInclude = {
+    messages?: boolean | User$messagesArgs
+    _count?: boolean | UserCountOutputTypeArgs
+  }
 
   export type UserGetPayload<S extends boolean | null | undefined | UserArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? User :
     S extends undefined ? never :
     S extends { include: any } & (UserArgs | UserFindManyArgs)
-    ? User 
+    ? User  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'messages' ? Array < MessageGetPayload<S['include'][P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
     : S extends { select: any } & (UserArgs | UserFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-    P extends keyof User ? User[P] : never
+        P extends 'messages' ? Array < MessageGetPayload<S['select'][P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
   } 
       : User
 
@@ -1348,6 +1402,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
+    messages<T extends User$messagesArgs= {}>(args?: Subset<T, User$messagesArgs>): PrismaPromise<Array<MessageGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -1385,6 +1440,10 @@ export namespace Prisma {
      */
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -1411,6 +1470,10 @@ export namespace Prisma {
      */
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -1425,6 +1488,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
     /**
      * Filter, which User to fetch.
      */
@@ -1482,6 +1549,10 @@ export namespace Prisma {
      */
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
+    /**
      * Filter, which User to fetch.
      */
     where?: UserWhereInput
@@ -1527,6 +1598,10 @@ export namespace Prisma {
      */
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
+    /**
      * Filter, which Users to fetch.
      */
     where?: UserWhereInput
@@ -1567,6 +1642,10 @@ export namespace Prisma {
      */
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
+    /**
      * The data needed to create a User.
      */
     data: XOR<UserCreateInput, UserUncheckedCreateInput>
@@ -1581,6 +1660,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
     /**
      * The data needed to update a User.
      */
@@ -1616,6 +1699,10 @@ export namespace Prisma {
      */
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
+    /**
      * The filter to search for the User to update in case it exists.
      */
     where: UserWhereUniqueInput
@@ -1639,6 +1726,10 @@ export namespace Prisma {
      */
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
+    /**
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
@@ -1657,6 +1748,27 @@ export namespace Prisma {
 
 
   /**
+   * User.messages
+   */
+  export type User$messagesArgs = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
+    where?: MessageWhereInput
+    orderBy?: Enumerable<MessageOrderByWithRelationInput>
+    cursor?: MessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<MessageScalarFieldEnum>
+  }
+
+
+  /**
    * User without action
    */
   export type UserArgs = {
@@ -1664,6 +1776,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the User
      */
     select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
   }
 
 
@@ -1814,7 +1930,7 @@ export namespace Prisma {
     text: string
     createdAt: Date
     updatedAt: Date
-    userId: string | null
+    userId: string
     hasImage: boolean
     _count: MessageCountAggregateOutputType | null
     _min: MessageMinAggregateOutputType | null
@@ -1840,21 +1956,29 @@ export namespace Prisma {
     text?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    createdBy?: boolean | UserArgs
     userId?: boolean
     hasImage?: boolean
   }
 
+
+  export type MessageInclude = {
+    createdBy?: boolean | UserArgs
+  }
 
   export type MessageGetPayload<S extends boolean | null | undefined | MessageArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? Message :
     S extends undefined ? never :
     S extends { include: any } & (MessageArgs | MessageFindManyArgs)
-    ? Message 
+    ? Message  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'createdBy' ? UserGetPayload<S['include'][P]> :  never
+  } 
     : S extends { select: any } & (MessageArgs | MessageFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-    P extends keyof Message ? Message[P] : never
+        P extends 'createdBy' ? UserGetPayload<S['select'][P]> :  P extends keyof Message ? Message[P] : never
   } 
       : Message
 
@@ -2212,6 +2336,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
+    createdBy<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -2249,6 +2374,10 @@ export namespace Prisma {
      */
     select?: MessageSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
+    /**
      * Filter, which Message to fetch.
      */
     where: MessageWhereUniqueInput
@@ -2275,6 +2404,10 @@ export namespace Prisma {
      */
     select?: MessageSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
+    /**
      * Filter, which Message to fetch.
      */
     where: MessageWhereUniqueInput
@@ -2289,6 +2422,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the Message
      */
     select?: MessageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
     /**
      * Filter, which Message to fetch.
      */
@@ -2346,6 +2483,10 @@ export namespace Prisma {
      */
     select?: MessageSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
+    /**
      * Filter, which Message to fetch.
      */
     where?: MessageWhereInput
@@ -2391,6 +2532,10 @@ export namespace Prisma {
      */
     select?: MessageSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
+    /**
      * Filter, which Messages to fetch.
      */
     where?: MessageWhereInput
@@ -2431,6 +2576,10 @@ export namespace Prisma {
      */
     select?: MessageSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
+    /**
      * The data needed to create a Message.
      */
     data: XOR<MessageCreateInput, MessageUncheckedCreateInput>
@@ -2445,6 +2594,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the Message
      */
     select?: MessageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
     /**
      * The data needed to update a Message.
      */
@@ -2480,6 +2633,10 @@ export namespace Prisma {
      */
     select?: MessageSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
+    /**
      * The filter to search for the Message to update in case it exists.
      */
     where: MessageWhereUniqueInput
@@ -2502,6 +2659,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the Message
      */
     select?: MessageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
     /**
      * Filter which Message to delete.
      */
@@ -2528,6 +2689,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the Message
      */
     select?: MessageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: MessageInclude | null
   }
 
 
@@ -2588,6 +2753,7 @@ export namespace Prisma {
     id?: StringFilter | string
     username?: StringFilter | string
     name?: StringFilter | string
+    messages?: MessageListRelationFilter
     password?: StringFilter | string
   }
 
@@ -2595,6 +2761,7 @@ export namespace Prisma {
     id?: SortOrder
     username?: SortOrder
     name?: SortOrder
+    messages?: MessageOrderByRelationAggregateInput
     password?: SortOrder
   }
 
@@ -2630,7 +2797,8 @@ export namespace Prisma {
     text?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
-    userId?: StringNullableFilter | string | null
+    createdBy?: XOR<UserRelationFilter, UserWhereInput>
+    userId?: StringFilter | string
     hasImage?: BoolFilter | boolean
   }
 
@@ -2639,13 +2807,13 @@ export namespace Prisma {
     text?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdBy?: UserOrderByWithRelationInput
     userId?: SortOrder
     hasImage?: SortOrder
   }
 
   export type MessageWhereUniqueInput = {
     id?: string
-    userId?: string
   }
 
   export type MessageOrderByWithAggregationInput = {
@@ -2668,7 +2836,7 @@ export namespace Prisma {
     text?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
-    userId?: StringNullableWithAggregatesFilter | string | null
+    userId?: StringWithAggregatesFilter | string
     hasImage?: BoolWithAggregatesFilter | boolean
   }
 
@@ -2676,6 +2844,7 @@ export namespace Prisma {
     id?: string
     username: string
     name: string
+    messages?: MessageCreateNestedManyWithoutCreatedByInput
     password: string
   }
 
@@ -2683,6 +2852,7 @@ export namespace Prisma {
     id?: string
     username: string
     name: string
+    messages?: MessageUncheckedCreateNestedManyWithoutCreatedByInput
     password: string
   }
 
@@ -2690,6 +2860,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    messages?: MessageUpdateManyWithoutCreatedByNestedInput
     password?: StringFieldUpdateOperationsInput | string
   }
 
@@ -2697,6 +2868,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    messages?: MessageUncheckedUpdateManyWithoutCreatedByNestedInput
     password?: StringFieldUpdateOperationsInput | string
   }
 
@@ -2719,7 +2891,7 @@ export namespace Prisma {
     text: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    userId?: string | null
+    createdBy?: UserCreateNestedOneWithoutMessagesInput
     hasImage?: boolean
   }
 
@@ -2728,7 +2900,7 @@ export namespace Prisma {
     text: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    userId?: string | null
+    userId?: string
     hasImage?: boolean
   }
 
@@ -2737,7 +2909,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: UserUpdateOneRequiredWithoutMessagesNestedInput
     hasImage?: BoolFieldUpdateOperationsInput | boolean
   }
 
@@ -2746,7 +2918,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     hasImage?: BoolFieldUpdateOperationsInput | boolean
   }
 
@@ -2755,7 +2927,6 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
     hasImage?: BoolFieldUpdateOperationsInput | boolean
   }
 
@@ -2764,7 +2935,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     hasImage?: BoolFieldUpdateOperationsInput | boolean
   }
 
@@ -2780,6 +2951,16 @@ export namespace Prisma {
     startsWith?: string
     endsWith?: string
     not?: NestedStringFilter | string
+  }
+
+  export type MessageListRelationFilter = {
+    every?: MessageWhereInput
+    some?: MessageWhereInput
+    none?: MessageWhereInput
+  }
+
+  export type MessageOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -2831,18 +3012,9 @@ export namespace Prisma {
     not?: NestedDateTimeFilter | Date | string
   }
 
-  export type StringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableFilter | string | null
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
   }
 
   export type BoolFilter = {
@@ -2891,23 +3063,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter
   }
 
-  export type StringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedStringNullableFilter
-    _max?: NestedStringNullableFilter
-  }
-
   export type BoolWithAggregatesFilter = {
     equals?: boolean
     not?: NestedBoolWithAggregatesFilter | boolean
@@ -2916,16 +3071,64 @@ export namespace Prisma {
     _max?: NestedBoolFilter
   }
 
+  export type MessageCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<Enumerable<MessageCreateWithoutCreatedByInput>, Enumerable<MessageUncheckedCreateWithoutCreatedByInput>>
+    connectOrCreate?: Enumerable<MessageCreateOrConnectWithoutCreatedByInput>
+    connect?: Enumerable<MessageWhereUniqueInput>
+  }
+
+  export type MessageUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<Enumerable<MessageCreateWithoutCreatedByInput>, Enumerable<MessageUncheckedCreateWithoutCreatedByInput>>
+    connectOrCreate?: Enumerable<MessageCreateOrConnectWithoutCreatedByInput>
+    connect?: Enumerable<MessageWhereUniqueInput>
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type MessageUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<Enumerable<MessageCreateWithoutCreatedByInput>, Enumerable<MessageUncheckedCreateWithoutCreatedByInput>>
+    connectOrCreate?: Enumerable<MessageCreateOrConnectWithoutCreatedByInput>
+    upsert?: Enumerable<MessageUpsertWithWhereUniqueWithoutCreatedByInput>
+    set?: Enumerable<MessageWhereUniqueInput>
+    disconnect?: Enumerable<MessageWhereUniqueInput>
+    delete?: Enumerable<MessageWhereUniqueInput>
+    connect?: Enumerable<MessageWhereUniqueInput>
+    update?: Enumerable<MessageUpdateWithWhereUniqueWithoutCreatedByInput>
+    updateMany?: Enumerable<MessageUpdateManyWithWhereWithoutCreatedByInput>
+    deleteMany?: Enumerable<MessageScalarWhereInput>
+  }
+
+  export type MessageUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<Enumerable<MessageCreateWithoutCreatedByInput>, Enumerable<MessageUncheckedCreateWithoutCreatedByInput>>
+    connectOrCreate?: Enumerable<MessageCreateOrConnectWithoutCreatedByInput>
+    upsert?: Enumerable<MessageUpsertWithWhereUniqueWithoutCreatedByInput>
+    set?: Enumerable<MessageWhereUniqueInput>
+    disconnect?: Enumerable<MessageWhereUniqueInput>
+    delete?: Enumerable<MessageWhereUniqueInput>
+    connect?: Enumerable<MessageWhereUniqueInput>
+    update?: Enumerable<MessageUpdateWithWhereUniqueWithoutCreatedByInput>
+    updateMany?: Enumerable<MessageUpdateManyWithWhereWithoutCreatedByInput>
+    deleteMany?: Enumerable<MessageScalarWhereInput>
+  }
+
+  export type UserCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<UserCreateWithoutMessagesInput, UserUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMessagesInput
+    connect?: UserWhereUniqueInput
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
+  export type UserUpdateOneRequiredWithoutMessagesNestedInput = {
+    create?: XOR<UserCreateWithoutMessagesInput, UserUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMessagesInput
+    upsert?: UserUpsertWithoutMessagesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<UserUpdateWithoutMessagesInput, UserUncheckedUpdateWithoutMessagesInput>
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -2985,20 +3188,6 @@ export namespace Prisma {
     not?: NestedDateTimeFilter | Date | string
   }
 
-  export type NestedStringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableFilter | string | null
-  }
-
   export type NestedBoolFilter = {
     equals?: boolean
     not?: NestedBoolFilter | boolean
@@ -3018,40 +3207,123 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter
   }
 
-  export type NestedStringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedStringNullableFilter
-    _max?: NestedStringNullableFilter
-  }
-
-  export type NestedIntNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | null
-    notIn?: Enumerable<number> | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableFilter | number | null
-  }
-
   export type NestedBoolWithAggregatesFilter = {
     equals?: boolean
     not?: NestedBoolWithAggregatesFilter | boolean
     _count?: NestedIntFilter
     _min?: NestedBoolFilter
     _max?: NestedBoolFilter
+  }
+
+  export type MessageCreateWithoutCreatedByInput = {
+    id?: string
+    text: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    hasImage?: boolean
+  }
+
+  export type MessageUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    text: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    hasImage?: boolean
+  }
+
+  export type MessageCreateOrConnectWithoutCreatedByInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutCreatedByInput, MessageUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type MessageUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: MessageWhereUniqueInput
+    update: XOR<MessageUpdateWithoutCreatedByInput, MessageUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<MessageCreateWithoutCreatedByInput, MessageUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type MessageUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: MessageWhereUniqueInput
+    data: XOR<MessageUpdateWithoutCreatedByInput, MessageUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type MessageUpdateManyWithWhereWithoutCreatedByInput = {
+    where: MessageScalarWhereInput
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutMessagesInput>
+  }
+
+  export type MessageScalarWhereInput = {
+    AND?: Enumerable<MessageScalarWhereInput>
+    OR?: Enumerable<MessageScalarWhereInput>
+    NOT?: Enumerable<MessageScalarWhereInput>
+    id?: StringFilter | string
+    text?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    userId?: StringFilter | string
+    hasImage?: BoolFilter | boolean
+  }
+
+  export type UserCreateWithoutMessagesInput = {
+    id?: string
+    username: string
+    name: string
+    password: string
+  }
+
+  export type UserUncheckedCreateWithoutMessagesInput = {
+    id?: string
+    username: string
+    name: string
+    password: string
+  }
+
+  export type UserCreateOrConnectWithoutMessagesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMessagesInput, UserUncheckedCreateWithoutMessagesInput>
+  }
+
+  export type UserUpsertWithoutMessagesInput = {
+    update: XOR<UserUpdateWithoutMessagesInput, UserUncheckedUpdateWithoutMessagesInput>
+    create: XOR<UserCreateWithoutMessagesInput, UserUncheckedCreateWithoutMessagesInput>
+  }
+
+  export type UserUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserUncheckedUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MessageUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasImage?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type MessageUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasImage?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type MessageUncheckedUpdateManyWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasImage?: BoolFieldUpdateOperationsInput | boolean
   }
 
 

@@ -5,16 +5,11 @@ import ChatPage from '~/components/Chat';
 
 const IndexPage = () => {
   const cookies = parseCookies();
-  const [mode, setMode] = useState('login');
-  useEffect(() => {
-    if (cookies.user_id) {
-      setMode('chat');
-    }
-  }, [cookies.user_id]);
+  const [mode, setMode] = useState('chat');
   if (mode === 'login') {
     return <LoginPage setFunction={setMode} />;
   } else {
-    return <ChatPage />;
+    return <ChatPage setFunction={setMode} />;
   }
 };
 

@@ -13,10 +13,17 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import styles from './ChatInput.module.css';
 import { trpc } from '~/utils/trpc';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { parseCookies } from 'nookies';
 
-export function ChatInput(props: TextInputProps) {
+interface ModeProps {
+  setFunction: React.Dispatch<SetStateAction<string>>;
+}
+
+export default function ChatInput(
+  { setFunction }: ModeProps,
+  props: TextInputProps,
+) {
   library.add(faPaperPlane, faPlus, faSmileBeam);
   const theme = useMantineTheme();
 
@@ -31,12 +38,25 @@ export function ChatInput(props: TextInputProps) {
   });
   const [message, setMessage] = useState('');
 
+  const handleSubmit = () => {
+    if (userId) {
+      addMessage.mutateAsync({
+        hasImage: false,
+        text: message,
+        userId: userId,
+      });
+    } else {
+      setFunction('login');
+    }
+  };
+
   return (
     <div className={styles.inputConsole}>
       <TextInput
         className={styles.input}
         radius="xl"
         size="sm"
+        onInput={(e) => setMessage(e.currentTarget.value)}
         rightSection={
           <div className={styles.buttons}>
             <ActionIcon
@@ -53,6 +73,7 @@ export function ChatInput(props: TextInputProps) {
               radius="xl"
               color={theme.primaryColor}
               variant="filled"
+              onClick={handleSubmit}
             >
               <FontAwesomeIcon icon={faPaperPlane} />
             </ActionIcon>
