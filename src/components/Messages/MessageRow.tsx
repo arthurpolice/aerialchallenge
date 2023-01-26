@@ -24,6 +24,7 @@ export default function MessageRow({
   const cookies = parseCookies();
   const cookiesId = cookies.user_id;
   const senderId = message.createdBy.id;
+  const hasImage = message.hasImage;
   const [direction, setDirection] = useState('');
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function MessageRow({
     autoScroll();
   });
 
-  if (direction !== '') {
+  if (direction !== '' && !hasImage) {
     return (
       <div className={styles.message}>
         <MessageBox
@@ -47,6 +48,27 @@ export default function MessageRow({
           type="text"
           text={message.text}
           date={message.createdAt}
+        />
+      </div>
+    );
+  } else if (direction !== '' && hasImage) {
+    // Get the image from S3
+    return (
+      <div className={styles.message}>
+        <MessageBox
+          position={direction}
+          title={message.createdBy.name}
+          type={'photo'}
+          text={message.text}
+          date={message.createdAt}
+          data={{
+            status: {
+              autoDownload: true,
+              download: true,
+              loading: 1,
+            },
+            uri: 'https://media.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif',
+          }}
         />
       </div>
     );

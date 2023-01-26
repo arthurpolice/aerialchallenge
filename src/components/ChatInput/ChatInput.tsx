@@ -41,7 +41,7 @@ export default function ChatInput(
   const handleSubmit = async () => {
     if (userId) {
       await addMessage.mutateAsync({
-        hasImage: false,
+        hasImage: true,
         text: message,
         userId: userId,
       });

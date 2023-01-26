@@ -16,7 +16,7 @@ interface Props {
 
 export default function Messages({ list, autoScroll }: Props) {
   return (
-    <div>
+    <>
       {list.map((message: Message) => {
         return (
           <MessageRow
@@ -26,6 +26,6 @@ export default function Messages({ list, autoScroll }: Props) {
           />
         );
       })}
-    </div>
+    </>
   );
 }
