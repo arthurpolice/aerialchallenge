@@ -5,10 +5,13 @@
 .inputConsole {
   display: flex;
   justify-content: center;
+  margin-top: 2rem;
 }
 
 .smile {
   font-size: 1.5rem;
+  cursor: pointer;
+  pointer-events: all !important;
 }
 
 .buttons {
@@ -21,4 +24,14 @@
   .input {
     width: 90vw;
   }
+  .smile {
+    display: none;
+  }
+}
+
+.emojiBoard {
+  position: absolute;
+  left: 0vw;
+  top: -48vh;
+  pointer-events: all;
 }

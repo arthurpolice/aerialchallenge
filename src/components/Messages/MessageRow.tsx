@@ -35,10 +35,6 @@ export default function MessageRow({
     }
   }, [senderId, cookiesId]);
 
-  useEffect(() => {
-    autoScroll();
-  });
-
   if (direction !== '' && !hasImage) {
     return (
       <div className={styles.message}>

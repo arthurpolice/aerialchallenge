@@ -1,7 +1,7 @@
-import React, { SetStateAction, useRef } from 'react';
+import React, { SetStateAction, useEffect, useRef, useState } from 'react';
 import { trpc } from '~/utils/trpc';
 import ChatInput from './ChatInput/ChatInput';
-import Messages from './Messages/Messages';
+import MessageRow from './Messages/MessageRow';
 import styles from './Messages/Messages.module.css';
 
 export default function ChatPage({
@@ -9,9 +9,18 @@ export default function ChatPage({
 }: {
   setFunction: React.Dispatch<SetStateAction<string>>;
 }) {
+  interface Message {
+    createdBy: any;
+    id: string;
+    hasImage: boolean;
+    text: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }
+
   const messageQuery = trpc.message.list.useInfiniteQuery(
     {
-      limit: 20,
+      limit: 30,
     },
     {
       getPreviousPageParam(lastPage) {
@@ -19,8 +28,9 @@ export default function ChatPage({
       },
     },
   );
+  const [messageAmount, setMessageAmount] = useState(20);
 
-  const getNextPage = () => {
+  const getNextPage = async () => {
     messageQuery.fetchPreviousPage();
   };
 
@@ -33,19 +43,31 @@ export default function ChatPage({
           parentNode.scrollTop +
           parentNode.clientHeight -
           parentNode.scrollHeight;
-        console.log(yOffsetDifference);
         if (yOffsetDifference && yOffsetDifference > -600) {
-          console.log('it worked');
           dummy.current.scrollIntoView({ behavior: 'smooth' });
         }
       }
     }
   };
+
+  let previousY;
   const onScroll = (event: any) => {
-    if (event.currentTarget.scrollTop === 0) {
+    const newY = event.currentTarget.scrollTop;
+    if (newY < 2500 && newY < previousY) {
+      setMessageAmount((amount) => amount + 10);
       getNextPage();
     }
+    previousY = newY;
   };
+
+  const main = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (main && main.current) {
+      main.current.scrollTop = main.current.scrollHeight;
+    }
+  }, []);
+  const flattenedList = messageQuery.data?.pages.flatMap((page) => page.items);
+  const messagesToRender = flattenedList?.slice(0, messageAmount);
   return (
     <>
       <div className={styles.root}>
@@ -53,10 +75,15 @@ export default function ChatPage({
           className={styles.main}
           onWheel={(e) => onScroll(e)}
           onScroll={(e) => onScroll(e)}
+          ref={main}
         >
-          {messageQuery.data?.pages.map((page, index) => {
+          {messagesToRender?.map((message: Message) => {
             return (
-              <Messages key={index} list={page.items} autoScroll={autoScroll} />
+              <MessageRow
+                key={message.id}
+                message={message}
+                autoScroll={autoScroll}
+              />
             );
           })}
           <div ref={dummy}></div>

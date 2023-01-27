@@ -13,8 +13,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import styles from './ChatInput.module.css';
 import { trpc } from '~/utils/trpc';
-import { SetStateAction, useState } from 'react';
+import { MouseEventHandler, SetStateAction, useState } from 'react';
 import { parseCookies } from 'nookies';
+import EmojiPicker from 'emoji-picker-react';
 
 interface HookProps {
   setFunction: React.Dispatch<SetStateAction<string>>;
@@ -39,53 +40,80 @@ export default function ChatInput(
   const [message, setMessage] = useState('');
 
   const handleSubmit = async () => {
-    if (userId) {
+    if (userId && message !== '') {
       await addMessage.mutateAsync({
         hasImage: true,
         text: message,
         userId: userId,
       });
       setMessage('');
-    } else {
+    } else if (!userId) {
       setFunction('login');
     }
   };
 
+  const [toggleEmoji, setToggleEmoji] = useState(false);
+  const handleEmojiToggle = () => {
+    setToggleEmoji(!toggleEmoji);
+  };
+  const handleClose = () => {
+    setToggleEmoji(false);
+  };
   return (
-    <div className={styles.inputConsole}>
-      <TextInput
-        className={styles.input}
-        radius="xl"
-        size="sm"
-        value={message}
-        onInput={(e) => setMessage(e.currentTarget.value)}
-        rightSection={
-          <div className={styles.buttons}>
-            <ActionIcon
-              className={styles.plusIcon}
-              size={30}
-              radius="xl"
-              color={theme.primaryColor}
-              variant="filled"
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </ActionIcon>
-            <ActionIcon
-              size={30}
-              radius="xl"
-              color={theme.primaryColor}
-              variant="filled"
-              onClick={handleSubmit}
-            >
-              <FontAwesomeIcon icon={faPaperPlane} />
-            </ActionIcon>
-          </div>
-        }
-        placeholder="Your message..."
-        rightSectionWidth={78}
-        icon={<FontAwesomeIcon icon={faSmileBeam} className={styles.smile} />}
-        {...props}
-      />
-    </div>
+    <>
+      <div className={styles.inputConsole}>
+        <TextInput
+          className={styles.input}
+          radius="xl"
+          size="sm"
+          value={message}
+          onInput={(e) => setMessage(e.currentTarget.value)}
+          rightSection={
+            <div className={styles.buttons}>
+              <ActionIcon
+                className={styles.plusIcon}
+                size={30}
+                radius="xl"
+                color={theme.primaryColor}
+                variant="filled"
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </ActionIcon>
+              <ActionIcon
+                size={30}
+                radius="xl"
+                color={theme.primaryColor}
+                variant="filled"
+                onClick={handleSubmit}
+              >
+                <FontAwesomeIcon icon={faPaperPlane} />
+              </ActionIcon>
+            </div>
+          }
+          placeholder="Your message..."
+          rightSectionWidth={78}
+          icon={
+            <>
+              {toggleEmoji && (
+                <div className={styles.emojiBoard} onMouseLeave={handleClose}>
+                  <EmojiPicker />
+                </div>
+              )}
+              <ActionIcon
+                className={styles.smile}
+                size={30}
+                radius="xl"
+                color={theme.primaryColor}
+                variant="filled"
+                onClick={handleEmojiToggle}
+              >
+                <FontAwesomeIcon icon={faSmileBeam} />
+              </ActionIcon>
+            </>
+          }
+          {...props}
+        />
+      </div>
+    </>
   );
 }

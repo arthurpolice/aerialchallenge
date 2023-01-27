@@ -9,6 +9,7 @@
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: rgba(var(--white-rgb),.16) transparent;
+  scroll-behavior: smooth;
 }
 
 .main::-webkit-scrollbar {
@@ -18,7 +19,7 @@
 .message {
   border-radius: 5px;
   font-size: 14px;
-  width: 50vw;
+  width: 100%;
 }
 
 @media screen and (max-width: 900px) {
