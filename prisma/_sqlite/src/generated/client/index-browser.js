@@ -95,7 +95,8 @@ exports.Prisma.MessageScalarFieldEnum = makeEnum({
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId',
-  hasImage: 'hasImage'
+  hasImage: 'hasImage',
+  imageUrl: 'imageUrl'
 });
 
 exports.Prisma.SortOrder = makeEnum({

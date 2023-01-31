@@ -27,37 +27,65 @@ export default function ChatInput(
   { setFunction }: HookProps,
   props: TextInputProps,
 ) {
+  // State
+  const [message, setMessage] = useState<string>('');
+  const [image, setImage] = useState<File | null>(null);
+  const [open, setOpen] = useState<boolean>(false);
+  const [toggleEmoji, setToggleEmoji] = useState<boolean>(false);
+
+  // Styling
   library.add(faPaperPlane, faPlus, faSmileBeam);
   const theme = useMantineTheme();
 
   const userId = parseCookies().user_id;
+
+  // Brings trpc helpers to the file
   const utils = trpc.useContext();
 
+  // Backend communication
   const addMessage = trpc.message.add.useMutation({
     async onSuccess() {
       // refetches messages after a post is added
       await utils.message.list.invalidate();
     },
   });
-
-  const [message, setMessage] = useState<string>('');
-  const [image, setImage] = useState<File | null>(null);
-  const [open, setOpen] = useState<boolean>(false);
+  const uploadImage = async () => {
+    if (image) {
+      const fileType = encodeURIComponent(image.type);
+      // Call our own API to get the pre-signed URL
+      const fetchAwsUrl = await fetch(`api/imageUpload?fileType=${fileType}`);
+      const response = await fetchAwsUrl.json();
+      const { uploadUrl, key } = response;
+      // Send the image to the pre-signed URL
+      await fetch(uploadUrl, {
+        method: 'PUT',
+        mode: 'cors',
+        body: image,
+      });
+      // Return the URL to display the image
+      return key;
+    }
+    return null;
+  };
 
   const handleSubmit = async () => {
-    if (userId && message !== '') {
+    if ((userId && message !== '') || (userId && image)) {
+      const imageUrl = await uploadImage();
       await addMessage.mutateAsync({
-        hasImage: true,
+        hasImage: image ? true : false,
+        imageUrl,
         text: message,
         userId: userId,
       });
       setMessage('');
+      setImage(null);
+      setOpen(false);
     } else if (!userId) {
       setFunction('login');
     }
   };
 
-  const [toggleEmoji, setToggleEmoji] = useState(false);
+  // Frontend and state manipulation
   const handleEmojiToggle = () => {
     setToggleEmoji(!toggleEmoji);
   };
@@ -68,17 +96,18 @@ export default function ChatInput(
     setMessage((message) => message + emoji.emoji);
     setToggleEmoji(false);
   };
-  const loadPicture = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    console.log(files);
-    const file = files ? files[0] : null;
-    file ? setImage(file) : null;
-    setOpen(true);
-  };
   const handleDialogClose = () => {
     setOpen(false);
     setImage(null);
   };
+
+  const loadPicture = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    const file = files ? files[0] : null;
+    file ? setImage(file) : null;
+    setOpen(true);
+  };
+
   return (
     <>
       <Dialog

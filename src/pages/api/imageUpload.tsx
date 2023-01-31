@@ -1,6 +1,6 @@
 import S3 from 'aws-sdk/clients/s3';
 import { randomUUID } from 'crypto';
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 const s3 = new S3({
   apiVersion: '2006-03-01',

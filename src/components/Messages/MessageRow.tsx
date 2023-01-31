@@ -2,6 +2,7 @@ import styles from './Messages.module.css';
 import MessageBox from './MessageBox/MessageBox';
 import { parseCookies } from 'nookies';
 import { useEffect, useState } from 'react';
+import { trpc } from '~/utils/trpc';
 
 interface Message {
   createdBy: any;
@@ -10,22 +11,34 @@ interface Message {
   text: string;
   createdAt: Date;
   updatedAt: Date;
-}
-
-interface Props {
-  message: Message;
-  autoScroll: () => void;
+  imageUrl: string;
 }
 
 export default function MessageRow({
   message,
-  autoScroll,
-}: Props): JSX.Element | undefined {
+}: {
+  message: Message;
+}): JSX.Element | undefined {
   const cookies = parseCookies();
   const cookiesId = cookies.user_id;
   const senderId = message.createdBy.id;
   const hasImage = message.hasImage;
   const [direction, setDirection] = useState('');
+
+  // Backend communication
+  const utils = trpc.useContext();
+  const removeMessage = trpc.message.delete.useMutation({
+    async onSuccess() {
+      // refetches messages after a post is added
+      await utils.message.list.invalidate();
+      await fetch(`api/imageDelete?key=${message.imageUrl}`);
+    },
+  });
+
+  const deleteMessage = async (id: string) => {
+    console.log(id);
+    await removeMessage.mutateAsync(id);
+  };
 
   useEffect(() => {
     if (senderId === cookiesId) {
@@ -39,6 +52,7 @@ export default function MessageRow({
     return (
       <div className={styles.message}>
         <MessageBox
+          onClick={() => deleteMessage(message.id)}
           position={direction}
           title={message.createdBy.name}
           type="text"
@@ -48,10 +62,10 @@ export default function MessageRow({
       </div>
     );
   } else if (direction !== '' && hasImage) {
-    // Get the image from S3
     return (
       <div className={styles.message}>
         <MessageBox
+          onClick={() => deleteMessage(message.id)}
           position={direction}
           title={message.createdBy.name}
           type={'photo'}
@@ -63,7 +77,7 @@ export default function MessageRow({
               download: true,
               loading: 1,
             },
-            uri: 'https://media.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif',
+            uri: `https://aerialchallenge.s3.amazonaws.com/${message.imageUrl}`,
           }}
         />
       </div>

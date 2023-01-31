@@ -11,6 +11,7 @@ const defaultMessageSelect = Prisma.validator<Prisma.MessageSelect>()({
   updatedAt: true,
   hasImage: true,
   createdBy: true,
+  imageUrl: true,
 });
 
 const prisma = new PrismaClient();
@@ -59,9 +60,9 @@ export const msgRouter = router({
     .input(
       z.object({
         id: z.string().uuid().optional(),
-        text: z.string().min(1),
+        text: z.string(),
         hasImage: z.boolean().optional(),
-        imageUrl: z.string().optional(),
+        imageUrl: z.string().nullish().optional(),
         userId: z.string(),
       }),
     )

@@ -29,11 +29,12 @@ export type User = {
  */
 export type Message = {
   id: string
-  text: string
+  text: string | null
   createdAt: Date
   updatedAt: Date
   userId: string
   hasImage: boolean
+  imageUrl: string | null
 }
 
 
@@ -1802,6 +1803,7 @@ export namespace Prisma {
     updatedAt: Date | null
     userId: string | null
     hasImage: boolean | null
+    imageUrl: string | null
   }
 
   export type MessageMaxAggregateOutputType = {
@@ -1811,6 +1813,7 @@ export namespace Prisma {
     updatedAt: Date | null
     userId: string | null
     hasImage: boolean | null
+    imageUrl: string | null
   }
 
   export type MessageCountAggregateOutputType = {
@@ -1820,6 +1823,7 @@ export namespace Prisma {
     updatedAt: number
     userId: number
     hasImage: number
+    imageUrl: number
     _all: number
   }
 
@@ -1831,6 +1835,7 @@ export namespace Prisma {
     updatedAt?: true
     userId?: true
     hasImage?: true
+    imageUrl?: true
   }
 
   export type MessageMaxAggregateInputType = {
@@ -1840,6 +1845,7 @@ export namespace Prisma {
     updatedAt?: true
     userId?: true
     hasImage?: true
+    imageUrl?: true
   }
 
   export type MessageCountAggregateInputType = {
@@ -1849,6 +1855,7 @@ export namespace Prisma {
     updatedAt?: true
     userId?: true
     hasImage?: true
+    imageUrl?: true
     _all?: true
   }
 
@@ -1927,11 +1934,12 @@ export namespace Prisma {
 
   export type MessageGroupByOutputType = {
     id: string
-    text: string
+    text: string | null
     createdAt: Date
     updatedAt: Date
     userId: string
     hasImage: boolean
+    imageUrl: string | null
     _count: MessageCountAggregateOutputType | null
     _min: MessageMinAggregateOutputType | null
     _max: MessageMaxAggregateOutputType | null
@@ -1959,6 +1967,7 @@ export namespace Prisma {
     createdBy?: boolean | UserArgs
     userId?: boolean
     hasImage?: boolean
+    imageUrl?: boolean
   }
 
 
@@ -2710,7 +2719,8 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     userId: 'userId',
-    hasImage: 'hasImage'
+    hasImage: 'hasImage',
+    imageUrl: 'imageUrl'
   };
 
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
@@ -2794,12 +2804,13 @@ export namespace Prisma {
     OR?: Enumerable<MessageWhereInput>
     NOT?: Enumerable<MessageWhereInput>
     id?: StringFilter | string
-    text?: StringFilter | string
+    text?: StringNullableFilter | string | null
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
     createdBy?: XOR<UserRelationFilter, UserWhereInput>
     userId?: StringFilter | string
     hasImage?: BoolFilter | boolean
+    imageUrl?: StringNullableFilter | string | null
   }
 
   export type MessageOrderByWithRelationInput = {
@@ -2810,6 +2821,7 @@ export namespace Prisma {
     createdBy?: UserOrderByWithRelationInput
     userId?: SortOrder
     hasImage?: SortOrder
+    imageUrl?: SortOrder
   }
 
   export type MessageWhereUniqueInput = {
@@ -2823,6 +2835,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     userId?: SortOrder
     hasImage?: SortOrder
+    imageUrl?: SortOrder
     _count?: MessageCountOrderByAggregateInput
     _max?: MessageMaxOrderByAggregateInput
     _min?: MessageMinOrderByAggregateInput
@@ -2833,11 +2846,12 @@ export namespace Prisma {
     OR?: Enumerable<MessageScalarWhereWithAggregatesInput>
     NOT?: Enumerable<MessageScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
-    text?: StringWithAggregatesFilter | string
+    text?: StringNullableWithAggregatesFilter | string | null
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
     userId?: StringWithAggregatesFilter | string
     hasImage?: BoolWithAggregatesFilter | boolean
+    imageUrl?: StringNullableWithAggregatesFilter | string | null
   }
 
   export type UserCreateInput = {
@@ -2888,55 +2902,61 @@ export namespace Prisma {
 
   export type MessageCreateInput = {
     id?: string
-    text: string
+    text?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: UserCreateNestedOneWithoutMessagesInput
     hasImage?: boolean
+    imageUrl?: string | null
   }
 
   export type MessageUncheckedCreateInput = {
     id?: string
-    text: string
+    text?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     userId?: string
     hasImage?: boolean
+    imageUrl?: string | null
   }
 
   export type MessageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
+    text?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: UserUpdateOneRequiredWithoutMessagesNestedInput
     hasImage?: BoolFieldUpdateOperationsInput | boolean
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
+    text?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
     hasImage?: BoolFieldUpdateOperationsInput | boolean
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
+    text?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hasImage?: BoolFieldUpdateOperationsInput | boolean
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
+    text?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
     hasImage?: BoolFieldUpdateOperationsInput | boolean
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StringFilter = {
@@ -3001,6 +3021,20 @@ export namespace Prisma {
     _max?: NestedStringFilter
   }
 
+  export type StringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableFilter | string | null
+  }
+
   export type DateTimeFilter = {
     equals?: Date | string
     in?: Enumerable<Date> | Enumerable<string>
@@ -3029,6 +3063,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     userId?: SortOrder
     hasImage?: SortOrder
+    imageUrl?: SortOrder
   }
 
   export type MessageMaxOrderByAggregateInput = {
@@ -3038,6 +3073,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     userId?: SortOrder
     hasImage?: SortOrder
+    imageUrl?: SortOrder
   }
 
   export type MessageMinOrderByAggregateInput = {
@@ -3047,6 +3083,24 @@ export namespace Prisma {
     updatedAt?: SortOrder
     userId?: SortOrder
     hasImage?: SortOrder
+    imageUrl?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
   }
 
   export type DateTimeWithAggregatesFilter = {
@@ -3119,6 +3173,10 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -3177,6 +3235,20 @@ export namespace Prisma {
     not?: NestedIntFilter | number
   }
 
+  export type NestedStringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableFilter | string | null
+  }
+
   export type NestedDateTimeFilter = {
     equals?: Date | string
     in?: Enumerable<Date> | Enumerable<string>
@@ -3191,6 +3263,34 @@ export namespace Prisma {
   export type NestedBoolFilter = {
     equals?: boolean
     not?: NestedBoolFilter | boolean
+  }
+
+  export type NestedStringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
+  }
+
+  export type NestedIntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | null
+    notIn?: Enumerable<number> | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
   }
 
   export type NestedDateTimeWithAggregatesFilter = {
@@ -3217,18 +3317,20 @@ export namespace Prisma {
 
   export type MessageCreateWithoutCreatedByInput = {
     id?: string
-    text: string
+    text?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     hasImage?: boolean
+    imageUrl?: string | null
   }
 
   export type MessageUncheckedCreateWithoutCreatedByInput = {
     id?: string
-    text: string
+    text?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     hasImage?: boolean
+    imageUrl?: string | null
   }
 
   export type MessageCreateOrConnectWithoutCreatedByInput = {
@@ -3257,11 +3359,12 @@ export namespace Prisma {
     OR?: Enumerable<MessageScalarWhereInput>
     NOT?: Enumerable<MessageScalarWhereInput>
     id?: StringFilter | string
-    text?: StringFilter | string
+    text?: StringNullableFilter | string | null
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
     userId?: StringFilter | string
     hasImage?: BoolFilter | boolean
+    imageUrl?: StringNullableFilter | string | null
   }
 
   export type UserCreateWithoutMessagesInput = {
@@ -3304,26 +3407,29 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutCreatedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
+    text?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hasImage?: BoolFieldUpdateOperationsInput | boolean
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUncheckedUpdateWithoutCreatedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
+    text?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hasImage?: BoolFieldUpdateOperationsInput | boolean
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUncheckedUpdateManyWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
+    text?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hasImage?: BoolFieldUpdateOperationsInput | boolean
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 
