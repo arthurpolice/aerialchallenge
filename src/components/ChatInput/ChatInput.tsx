@@ -3,6 +3,8 @@ import {
   TextInputProps,
   ActionIcon,
   useMantineTheme,
+  Dialog,
+  Title,
 } from '@mantine/core';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,7 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import styles from './ChatInput.module.css';
 import { trpc } from '~/utils/trpc';
-import { SetStateAction, useState } from 'react';
+import { ChangeEvent, SetStateAction, useState } from 'react';
 import { parseCookies } from 'nookies';
 import EmojiPicker from 'emoji-picker-react';
 
@@ -29,15 +31,18 @@ export default function ChatInput(
   const theme = useMantineTheme();
 
   const userId = parseCookies().user_id;
-
   const utils = trpc.useContext();
+
   const addMessage = trpc.message.add.useMutation({
     async onSuccess() {
       // refetches messages after a post is added
       await utils.message.list.invalidate();
     },
   });
-  const [message, setMessage] = useState('');
+
+  const [message, setMessage] = useState<string>('');
+  const [image, setImage] = useState<File | null>(null);
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleSubmit = async () => {
     if (userId && message !== '') {
@@ -56,16 +61,43 @@ export default function ChatInput(
   const handleEmojiToggle = () => {
     setToggleEmoji(!toggleEmoji);
   };
-  const handleClose = () => {
+  const handleEmojiClose = () => {
     setToggleEmoji(false);
   };
   const emojiClick = (emoji) => {
     setMessage((message) => message + emoji.emoji);
     setToggleEmoji(false);
   };
-
+  const loadPicture = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    console.log(files);
+    const file = files ? files[0] : null;
+    file ? setImage(file) : null;
+    setOpen(true);
+  };
+  const handleDialogClose = () => {
+    setOpen(false);
+    setImage(null);
+  };
   return (
     <>
+      <Dialog
+        className={styles.dialog}
+        opened={open}
+        withCloseButton
+        onClose={handleDialogClose}
+      >
+        {image && (
+          <img
+            src={URL.createObjectURL(image)}
+            className={styles.previewImage}
+          />
+        )}
+        <div>
+          <Title order={4}>You are uploading:</Title>
+          <Title order={4}>{image?.name}</Title>
+        </div>
+      </Dialog>
       <div className={styles.inputConsole}>
         <TextInput
           className={styles.input}
@@ -80,6 +112,7 @@ export default function ChatInput(
                 accept={'image/*'}
                 className={styles.hidden}
                 id={'image-input'}
+                onChange={loadPicture}
               />
               <ActionIcon
                 className={styles.plusIcon}
@@ -108,7 +141,10 @@ export default function ChatInput(
           icon={
             <>
               {toggleEmoji && (
-                <div className={styles.emojiBoard} onMouseLeave={handleClose}>
+                <div
+                  className={styles.emojiBoard}
+                  onMouseLeave={handleEmojiClose}
+                >
                   <EmojiPicker
                     onEmojiClick={emojiClick}
                     emojiStyle={'native'}

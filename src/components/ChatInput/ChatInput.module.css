@@ -39,3 +39,14 @@
 .hidden {
   display: none;
 }
+
+.previewImage {
+  max-height: 100px;
+  margin-right: 2rem;
+}
+
+.dialog {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
