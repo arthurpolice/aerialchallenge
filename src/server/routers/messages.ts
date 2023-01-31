@@ -1,18 +1,9 @@
-/**
- *
- * This is an example router, you can delete this file and then update `../pages/api/trpc/[trpc].tsx`
- */
 import { router, publicProcedure } from '../trpc';
 import { Prisma } from '../../../prisma/src/generated/client';
 import { PrismaClient } from '../../../prisma/src/generated/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-/**
- * Default selector for Post.
- * It's important to always explicitly say which fields you want to return in order to not leak extra information
- * @see https://github.com/prisma/prisma/issues/9353
- */
 const defaultMessageSelect = Prisma.validator<Prisma.MessageSelect>()({
   id: true,
   text: true,
@@ -33,12 +24,6 @@ export const msgRouter = router({
       }),
     )
     .query(async ({ input }) => {
-      /**
-       * For pagination docs you can have a look here
-       * @see https://trpc.io/docs/useInfiniteQuery
-       * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
-       */
-
       const limit = input.limit ?? 50;
       const { cursor } = input;
 
@@ -76,10 +61,13 @@ export const msgRouter = router({
         id: z.string().uuid().optional(),
         text: z.string().min(1),
         hasImage: z.boolean().optional(),
+        imageUrl: z.string().optional(),
         userId: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
+      if (input.hasImage) {
+      }
       const message = await prisma.message.create({
         data: input,
         select: defaultMessageSelect,

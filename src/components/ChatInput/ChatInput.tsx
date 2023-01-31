@@ -13,7 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import styles from './ChatInput.module.css';
 import { trpc } from '~/utils/trpc';
-import { MouseEventHandler, SetStateAction, useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { parseCookies } from 'nookies';
 import EmojiPicker from 'emoji-picker-react';
 
@@ -59,6 +59,11 @@ export default function ChatInput(
   const handleClose = () => {
     setToggleEmoji(false);
   };
+  const emojiClick = (emoji) => {
+    setMessage((message) => message + emoji.emoji);
+    setToggleEmoji(false);
+  };
+
   return (
     <>
       <div className={styles.inputConsole}>
@@ -70,8 +75,16 @@ export default function ChatInput(
           onInput={(e) => setMessage(e.currentTarget.value)}
           rightSection={
             <div className={styles.buttons}>
+              <input
+                type={'file'}
+                accept={'image/*'}
+                className={styles.hidden}
+                id={'image-input'}
+              />
               <ActionIcon
                 className={styles.plusIcon}
+                component={'label'}
+                htmlFor="image-input"
                 size={30}
                 radius="xl"
                 color={theme.primaryColor}
@@ -96,7 +109,10 @@ export default function ChatInput(
             <>
               {toggleEmoji && (
                 <div className={styles.emojiBoard} onMouseLeave={handleClose}>
-                  <EmojiPicker />
+                  <EmojiPicker
+                    onEmojiClick={emojiClick}
+                    emojiStyle={'native'}
+                  />
                 </div>
               )}
               <ActionIcon
