@@ -82,6 +82,8 @@ export default function ChatInput(
   return (
     <>
       <Dialog
+        position={{ bottom: 72 }}
+        size={300}
         className={styles.dialog}
         opened={open}
         withCloseButton
@@ -94,8 +96,12 @@ export default function ChatInput(
           />
         )}
         <div>
-          <Title order={4}>You are uploading:</Title>
-          <Title order={4}>{image?.name}</Title>
+          <Title className={styles.helperText} order={4}>
+            You are uploading:
+          </Title>
+          <Title className={styles.helperText} order={5}>
+            {image?.name}
+          </Title>
         </div>
       </Dialog>
       <div className={styles.inputConsole}>

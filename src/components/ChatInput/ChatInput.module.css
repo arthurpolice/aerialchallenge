@@ -20,15 +20,6 @@
   border-radius: 50px;
 }
 
-@media screen and (max-width: 900px) {
-  .input {
-    width: 90vw;
-  }
-  .smile {
-    display: none;
-  }
-}
-
 .emojiBoard {
   position: absolute;
   left: 0vw;
@@ -49,4 +40,21 @@
   display: flex;
   align-items: center;
   overflow: hidden;
+  width: fit-content;
+}
+
+@media screen and (max-width: 900px) {
+  .input {
+    width: 90vw;
+  }
+  .smile {
+    display: none;
+  }
+  .dialog {
+    width: 300px;
+    justify-content: center;
+  }
+  .helperText {
+    display: none;
+  }
 }
