@@ -29,21 +29,6 @@ export default function MessageRow({
     styles.leftMessage,
   );
 
-  // Backend communication
-  const utils = trpc.useContext();
-  const removeMessage = trpc.message.delete.useMutation({
-    async onSuccess() {
-      // refetches messages after a post is added
-      await utils.message.list.invalidate();
-      await fetch(`api/imageDelete?key=${message.imageUrl}`);
-    },
-  });
-
-  const deleteMessage = async (id: string) => {
-    console.log(id);
-    await removeMessage.mutateAsync(id);
-  };
-
   useEffect(() => {
     if (senderId === cookiesId) {
       setDirection('right');
@@ -57,14 +42,15 @@ export default function MessageRow({
     return (
       <div className={rowStyle}>
         <MessageBox
-          onClick={() => deleteMessage(message.id)}
           position={direction}
           title={message.createdBy.name}
           type="text"
           text={message.text}
           date={message.createdAt}
         />
-        {direction === 'right' && <DeleteButton />}
+        {direction === 'right' && (
+          <DeleteButton messageId={message.id} imageUrl={message.imageUrl} />
+        )}
       </div>
     );
   } else if (direction !== '' && hasImage) {
