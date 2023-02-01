@@ -18,14 +18,63 @@
   display: none;
 }
 
-.message {
+.rightMessage {
   border-radius: 5px;
   font-size: 14px;
   width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: hidden;
+}
+
+.rightMessage:hover>div {
+  animation-name: slide;
+  animation-duration: 500ms;
+  animation-fill-mode: forwards;
+}
+
+.rightMessage:hover>button {
+  animation-name: fadeIn;
+  animation-duration: 500ms;
+  animation-fill-mode: forwards;
+  margin-right: 15px;
+}
+
+.leftMessage {
+  border-radius: 5px;
+  font-size: 14px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 @media screen and (max-width: 900px) {
   .main {
     width: 100vw;
+  }
+}
+
+.deleteButton {
+  float: right;
+  opacity: 0%;
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-5%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
   }
 }

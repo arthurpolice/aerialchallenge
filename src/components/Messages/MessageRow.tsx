@@ -3,6 +3,7 @@ import MessageBox from './MessageBox/MessageBox';
 import { parseCookies } from 'nookies';
 import { useEffect, useState } from 'react';
 import { trpc } from '~/utils/trpc';
+import DeleteButton from './DeleteButton';
 
 interface Message {
   createdBy: any;
@@ -24,6 +25,9 @@ export default function MessageRow({
   const senderId = message.createdBy.id;
   const hasImage = message.hasImage;
   const [direction, setDirection] = useState('');
+  const [rowStyle, setRowStyle] = useState<string | undefined>(
+    styles.leftMessage,
+  );
 
   // Backend communication
   const utils = trpc.useContext();
@@ -43,6 +47,7 @@ export default function MessageRow({
   useEffect(() => {
     if (senderId === cookiesId) {
       setDirection('right');
+      setRowStyle(styles.rightMessage);
     } else {
       setDirection('left');
     }
@@ -50,7 +55,7 @@ export default function MessageRow({
 
   if (direction !== '' && !hasImage) {
     return (
-      <div className={styles.message}>
+      <div className={rowStyle}>
         <MessageBox
           onClick={() => deleteMessage(message.id)}
           position={direction}
@@ -59,11 +64,12 @@ export default function MessageRow({
           text={message.text}
           date={message.createdAt}
         />
+        {direction === 'right' && <DeleteButton />}
       </div>
     );
   } else if (direction !== '' && hasImage) {
     return (
-      <div className={styles.message}>
+      <div className={rowStyle}>
         <MessageBox
           onClick={() => deleteMessage(message.id)}
           position={direction}
@@ -80,6 +86,7 @@ export default function MessageRow({
             uri: `https://aerialchallenge.s3.amazonaws.com/${message.imageUrl}`,
           }}
         />
+        {direction === 'right' && <DeleteButton />}
       </div>
     );
   }
