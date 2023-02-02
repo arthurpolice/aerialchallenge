@@ -29,3 +29,13 @@ module.exports = getConfig({
   /** We run eslint as a separate task in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
 });
+
+const nextConfig = {
+  reactStrictMode: true,
+
+  compiler: {
+    styledComponents: true,
+  },
+};
+
+module.exports = nextConfig;

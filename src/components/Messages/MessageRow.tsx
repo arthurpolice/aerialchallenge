@@ -1,9 +1,8 @@
-import styles from './Messages.module.css';
-import MessageBox from './MessageBox/MessageBox';
 import { parseCookies } from 'nookies';
 import { useEffect, useState } from 'react';
-import { trpc } from '~/utils/trpc';
 import DeleteButton from './DeleteButton';
+import styles from './Messages.module.css';
+import MessageBox from './MessageBox/MessageBox';
 
 interface Message {
   createdBy: any;
@@ -12,14 +11,14 @@ interface Message {
   text: string;
   createdAt: Date;
   updatedAt: Date;
-  imageUrl: string;
+  imageUrl: string | null;
 }
 
 export default function MessageRow({
   message,
 }: {
   message: Message;
-}): JSX.Element | undefined {
+}): JSX.Element {
   const cookies = parseCookies();
   const cookiesId = cookies.user_id;
   const senderId = message.createdBy.id;
@@ -57,7 +56,6 @@ export default function MessageRow({
     return (
       <div className={rowStyle}>
         <MessageBox
-          onClick={() => deleteMessage(message.id)}
           position={direction}
           title={message.createdBy.name}
           type={'photo'}
@@ -72,8 +70,12 @@ export default function MessageRow({
             uri: `https://aerialchallenge.s3.amazonaws.com/${message.imageUrl}`,
           }}
         />
-        {direction === 'right' && <DeleteButton />}
+        {direction === 'right' && (
+          <DeleteButton messageId={message.id} imageUrl={message.imageUrl} />
+        )}
       </div>
     );
+  } else {
+    return <p>Loading...</p>;
   }
 }

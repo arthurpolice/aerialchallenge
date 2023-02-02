@@ -1,9 +1,10 @@
-import React, { SetStateAction, useEffect, useRef, useState } from 'react';
+import React, { SetStateAction, useRef } from 'react';
 import { trpc } from '~/utils/trpc';
 import ChatInput from './ChatInput/ChatInput';
 import MessageRow from './Messages/MessageRow';
 import styles from './Messages/Messages.module.css';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import NavbarMinimal from './Navbar/Navbar';
 
 export default function ChatPage({
   setFunction,
@@ -17,6 +18,7 @@ export default function ChatPage({
     text: string;
     createdAt: Date;
     updatedAt: Date;
+    imageUrl: string | null;
   }
 
   const messageQuery = trpc.message.list.useInfiniteQuery(
@@ -32,22 +34,6 @@ export default function ChatPage({
 
   const getNextPage = async () => {
     messageQuery.fetchPreviousPage();
-  };
-
-  const dummy = useRef<HTMLDivElement>(null);
-  const autoScroll = () => {
-    if (dummy.current) {
-      const parentNode = dummy.current.parentElement;
-      if (parentNode) {
-        const yOffsetDifference =
-          parentNode.scrollTop +
-          parentNode.clientHeight -
-          parentNode.scrollHeight;
-        if (yOffsetDifference && yOffsetDifference > -600) {
-          dummy.current.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    }
   };
 
   const onScroll = () => {
@@ -70,16 +56,9 @@ export default function ChatPage({
             scrollThreshold={'1000px'}
           >
             {flattenedList?.map((message: Message) => {
-              return (
-                <MessageRow
-                  key={message.id}
-                  message={message}
-                  autoScroll={autoScroll}
-                />
-              );
+              return <MessageRow key={message.id} message={message} />;
             })}
           </InfiniteScroll>
-          <div ref={dummy}></div>
         </div>
       </div>
       <ChatInput setFunction={setFunction} />

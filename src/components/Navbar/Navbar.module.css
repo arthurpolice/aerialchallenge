@@ -1,0 +1,48 @@
+.navbar {
+  position: absolute;
+  gap: 100px;
+}
+
+.navbarShow {
+  position: absolute;
+  gap: 100px;
+}
+
+.navbarIcon {
+  font-size: 2rem;
+}
+
+.collapseButton {
+  display: none;
+}
+
+@media screen and (max-width: 900px) {
+  .navbar {
+    width: 0;
+    padding: 0;
+  }
+  .navbarButton {
+    display: none;
+  }
+  .navbarShow {
+    animation-name: slide;
+    animation-fill-mode: forwards;
+    animation-duration: 300ms;
+    padding-top: 0;
+    padding-bottom: 0;
+    gap: 0;
+  }
+  .collapseButton {
+    display: block;
+  }
+}
+
+@keyframes slide {
+  from {
+    width: 0;
+    padding: 0;
+  }
+  to {
+    width: auto;
+  }
+}

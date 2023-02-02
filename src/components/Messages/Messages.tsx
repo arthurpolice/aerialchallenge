@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import MessageRow from './MessageRow';
 interface Message {
   createdBy: any;
@@ -7,24 +6,18 @@ interface Message {
   text: string;
   createdAt: Date;
   updatedAt: Date;
+  imageUrl: string | null;
 }
 
 interface Props {
   list: Message[];
-  autoScroll: () => void;
 }
 
-export default function Messages({ list, autoScroll }: Props) {
+export default function Messages({ list }: Props) {
   return (
     <>
       {list.map((message: Message) => {
-        return (
-          <MessageRow
-            key={message.id}
-            message={message}
-            autoScroll={autoScroll}
-          />
-        );
+        return <MessageRow key={message.id} message={message} />;
       })}
     </>
   );

@@ -110,34 +110,35 @@ export default function ChatInput(
 
   return (
     <>
-      <Dialog
-        position={{ bottom: 72 }}
-        size={300}
-        className={styles.dialog}
-        opened={open}
-        withCloseButton
-        onClose={handleDialogClose}
-      >
-        {image && (
-          <img
-            src={URL.createObjectURL(image)}
-            className={styles.previewImage}
-          />
-        )}
-        <div>
-          <Title className={styles.helperText} order={4}>
-            You are uploading:
-          </Title>
-          <Title className={styles.helperText} order={5}>
-            {image?.name}
-          </Title>
-        </div>
-      </Dialog>
       <div className={styles.inputConsole}>
+        <Dialog
+          position={{ bottom: 72, right: 24 }}
+          size={300}
+          className={styles.dialog}
+          opened={open}
+          withCloseButton
+          onClose={handleDialogClose}
+        >
+          {image && (
+            <img
+              src={URL.createObjectURL(image)}
+              className={styles.previewImage}
+            />
+          )}
+          <div>
+            <Title className={styles.helperText} order={4}>
+              You are uploading:
+            </Title>
+            <Title className={styles.helperText} order={5}>
+              {image?.name}
+            </Title>
+          </div>
+        </Dialog>
         <TextInput
           className={styles.input}
           radius="xl"
           size="sm"
+          disabled={userId ? false : true}
           value={message}
           onInput={(e) => setMessage(e.currentTarget.value)}
           rightSection={
@@ -171,7 +172,7 @@ export default function ChatInput(
               </ActionIcon>
             </div>
           }
-          placeholder="Your message..."
+          placeholder={userId ? 'Your message...' : 'Please Log In'}
           rightSectionWidth={78}
           icon={
             <>

@@ -9,7 +9,6 @@
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: rgba(var(--white-rgb),.16) transparent;
-  scroll-behavior: smooth;
   display: flex;
   flex-direction: column-reverse;
 }
