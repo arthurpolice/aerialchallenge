@@ -3,16 +3,7 @@ import { useEffect, useState } from 'react';
 import DeleteButton from './DeleteButton';
 import styles from './Messages.module.css';
 import MessageBox from './MessageBox/MessageBox';
-
-interface Message {
-  createdBy: any;
-  id: string;
-  hasImage: boolean;
-  text: string;
-  createdAt: Date;
-  updatedAt: Date;
-  imageUrl: string | null;
-}
+import { Message } from '../types.d';
 
 export default function MessageRow({
   message,

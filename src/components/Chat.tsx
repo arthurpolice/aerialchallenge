@@ -4,21 +4,13 @@ import ChatInput from './ChatInput/ChatInput';
 import MessageRow from './Messages/MessageRow';
 import styles from './Messages/Messages.module.css';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Message } from './types.d';
 
 export default function ChatPage({
   setFunction,
 }: {
   setFunction: React.Dispatch<SetStateAction<string>>;
 }) {
-  interface Message {
-    createdBy: any;
-    id: string;
-    hasImage: boolean;
-    text: string;
-    createdAt: Date;
-    updatedAt: Date;
-    imageUrl: string | null;
-  }
   // Get paginated data from backend
   const messageQuery = trpc.message.list.useInfiniteQuery(
     {

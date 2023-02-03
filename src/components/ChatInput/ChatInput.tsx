@@ -15,7 +15,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import styles from './ChatInput.module.css';
 import { trpc } from '~/utils/trpc';
-import { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { parseCookies } from 'nookies';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
@@ -28,7 +34,7 @@ export default function ChatInput(
   props: TextInputProps,
 ): JSX.Element {
   // State
-  const [message, setMessage] = useState<string>('');
+  const messageRef = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [toggleEmoji, setToggleEmoji] = useState<boolean>(false);
@@ -111,15 +117,18 @@ export default function ChatInput(
   };
 
   const handleSubmit = async () => {
-    if ((userId && message !== '') || (userId && image)) {
+    if (
+      (userId && messageRef.current && messageRef.current.value !== '') ||
+      (userId && image)
+    ) {
       const imageUrl = await uploadImage();
       await addMessage.mutateAsync({
         hasImage: image ? true : false,
         imageUrl,
-        text: message,
+        text: messageRef.current ? messageRef.current.value : '',
         userId: userId,
       });
-      setMessage('');
+      messageRef.current ? (messageRef.current.value = '') : null;
       setImage(null);
       setOpen(false);
     } else if (!userId) {
@@ -135,7 +144,8 @@ export default function ChatInput(
     setToggleEmoji(false);
   };
   const emojiClick = (emoji: EmojiClickData) => {
-    setMessage((message) => message + emoji.emoji);
+    // What the hell am i writing here? is this really the best way to do this????
+    messageRef.current ? (messageRef.current.value += emoji.emoji) : null;
     setToggleEmoji(false);
   };
   const handleDialogClose = () => {
@@ -181,8 +191,7 @@ export default function ChatInput(
           radius="xl"
           size="sm"
           disabled={loggedIn ? false : true}
-          value={message}
-          onInput={(e) => setMessage(e.currentTarget.value)}
+          ref={messageRef}
           rightSection={
             <div className={styles.buttons}>
               <input
