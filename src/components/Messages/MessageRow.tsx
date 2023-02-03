@@ -27,6 +27,7 @@ export default function MessageRow({
   const [rowStyle, setRowStyle] = useState<string | undefined>(
     styles.leftMessage,
   );
+  const [preSignedUrl, setPreSignedUrl] = useState<string>('');
 
   useEffect(() => {
     if (senderId === cookiesId) {
@@ -37,12 +38,28 @@ export default function MessageRow({
     }
   }, [senderId, cookiesId]);
 
+  const getPreSignedUrl = async (key: string | null) => {
+    if (key) {
+      const apiCall = await fetch(`api/imageGet?key=${key}`);
+      const response = await apiCall.json();
+      const { url } = response;
+      return url;
+    }
+  };
+  useEffect(() => {
+    getPreSignedUrl(message.imageUrl)
+      .then((response) => response)
+      .then((data) => {
+        setPreSignedUrl(data);
+      });
+  });
+
   if (direction !== '' && !hasImage) {
     return (
       <div className={rowStyle}>
         <MessageBox
           position={direction}
-          title={message.createdBy.name}
+          title={direction === 'right' ? '' : message.createdBy.name}
           type="text"
           text={message.text}
           date={message.createdAt}
@@ -57,7 +74,7 @@ export default function MessageRow({
       <div className={rowStyle}>
         <MessageBox
           position={direction}
-          title={message.createdBy.name}
+          title={direction === 'right' ? '' : message.createdBy.name}
           type={'photo'}
           text={message.text}
           date={message.createdAt}
@@ -65,9 +82,9 @@ export default function MessageRow({
             status: {
               autoDownload: true,
               download: true,
-              loading: 1,
+              loading: true,
             },
-            uri: `https://aerialchallenge.s3.amazonaws.com/${message.imageUrl}`,
+            uri: preSignedUrl,
           }}
         />
         {direction === 'right' && (
@@ -76,6 +93,6 @@ export default function MessageRow({
       </div>
     );
   } else {
-    return <p>Loading...</p>;
+    return <></>;
   }
 }

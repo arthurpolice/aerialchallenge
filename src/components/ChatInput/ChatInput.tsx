@@ -15,9 +15,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import styles from './ChatInput.module.css';
 import { trpc } from '~/utils/trpc';
-import { ChangeEvent, SetStateAction, useState } from 'react';
+import { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import { parseCookies } from 'nookies';
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
 interface HookProps {
   setFunction: React.Dispatch<SetStateAction<string>>;
@@ -32,18 +32,55 @@ export default function ChatInput(
   const [image, setImage] = useState<File | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [toggleEmoji, setToggleEmoji] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   // Styling
   library.add(faPaperPlane, faPlus, faSmileBeam);
   const theme = useMantineTheme();
 
   const userId = parseCookies().user_id;
+  useEffect(() => (userId ? setLoggedIn(true) : setLoggedIn(false)), [userId]);
 
   // Brings trpc helpers to the file
   const utils = trpc.useContext();
 
   // Backend communication
   const addMessage = trpc.message.add.useMutation({
+    async onMutate(newMessage) {
+      await utils.message.list.cancel();
+      const previousMessages = utils.message.list.getData();
+      console.log(previousMessages);
+      if (previousMessages) {
+        utils.message.list.setData(
+          {},
+          {
+            ...previousMessages,
+            items: [
+              ...previousMessages.items,
+              {
+                ...newMessage,
+                id: Math.random().toString(),
+                hasImage: false,
+                imageUrl: '',
+                createdAt: new Date(Date.now()),
+                updatedAt: new Date(Date.now()),
+                createdBy: {
+                  id: userId ? userId : Math.random().toString(),
+                  username: Math.random().toString(),
+                  password: Math.random().toString(),
+                  name: '',
+                },
+              },
+            ],
+          },
+        );
+      }
+
+      return { previousMessages };
+    },
+    onError: (err, newMessage, context) => {
+      utils.message.list.setData({}, context?.previousMessages);
+    },
     async onSuccess() {
       // refetches messages after a post is added
       await utils.message.list.invalidate();
@@ -92,7 +129,7 @@ export default function ChatInput(
   const handleEmojiClose = () => {
     setToggleEmoji(false);
   };
-  const emojiClick = (emoji) => {
+  const emojiClick = (emoji: EmojiClickData) => {
     setMessage((message) => message + emoji.emoji);
     setToggleEmoji(false);
   };
@@ -138,7 +175,7 @@ export default function ChatInput(
           className={styles.input}
           radius="xl"
           size="sm"
-          disabled={userId ? false : true}
+          disabled={loggedIn ? false : true}
           value={message}
           onInput={(e) => setMessage(e.currentTarget.value)}
           rightSection={
@@ -172,7 +209,7 @@ export default function ChatInput(
               </ActionIcon>
             </div>
           }
-          placeholder={userId ? 'Your message...' : 'Please Log In'}
+          placeholder={loggedIn ? 'Your message...' : 'Please Log In'}
           rightSectionWidth={78}
           icon={
             <>
@@ -184,6 +221,7 @@ export default function ChatInput(
                   <EmojiPicker
                     onEmojiClick={emojiClick}
                     emojiStyle={'native'}
+                    lazyLoadEmojis={true}
                   />
                 </div>
               )}

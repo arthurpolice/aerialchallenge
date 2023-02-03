@@ -4,7 +4,6 @@ import ChatInput from './ChatInput/ChatInput';
 import MessageRow from './Messages/MessageRow';
 import styles from './Messages/Messages.module.css';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import NavbarMinimal from './Navbar/Navbar';
 
 export default function ChatPage({
   setFunction,
