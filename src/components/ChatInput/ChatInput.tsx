@@ -26,7 +26,7 @@ interface HookProps {
 export default function ChatInput(
   { setFunction }: HookProps,
   props: TextInputProps,
-) {
+): JSX.Element {
   // State
   const [message, setMessage] = useState<string>('');
   const [image, setImage] = useState<File | null>(null);
@@ -38,6 +38,7 @@ export default function ChatInput(
   library.add(faPaperPlane, faPlus, faSmileBeam);
   const theme = useMantineTheme();
 
+  // "Authentication"
   const userId = parseCookies().user_id;
   useEffect(() => (userId ? setLoggedIn(true) : setLoggedIn(false)), [userId]);
 
@@ -48,30 +49,34 @@ export default function ChatInput(
   const addMessage = trpc.message.add.useMutation({
     async onMutate(newMessage) {
       await utils.message.list.cancel();
-      const previousMessages = utils.message.list.getData();
+      const previousMessages = utils.message.list.getInfiniteData({
+        limit: 30,
+        cursor: undefined,
+      });
       console.log(previousMessages);
       if (previousMessages) {
-        utils.message.list.setData(
-          {},
+        utils.message.list.setInfiniteData(
           {
-            ...previousMessages,
-            items: [
-              ...previousMessages.items,
-              {
-                ...newMessage,
-                id: Math.random().toString(),
-                hasImage: false,
-                imageUrl: '',
-                createdAt: new Date(Date.now()),
-                updatedAt: new Date(Date.now()),
-                createdBy: {
-                  id: userId ? userId : Math.random().toString(),
-                  username: Math.random().toString(),
-                  password: Math.random().toString(),
-                  name: '',
-                },
+            limit: 30,
+            cursor: undefined,
+          },
+          (items) => {
+            items?.pages[0]?.items.push({
+              ...newMessage,
+              id: Math.random().toString(),
+              hasImage: false,
+              imageUrl: '',
+              createdAt: new Date(Date.now()),
+              updatedAt: new Date(Date.now()),
+              createdBy: {
+                id: userId ? userId : Math.random().toString(),
+                username: Math.random().toString(),
+                password: Math.random().toString(),
+                name: '',
               },
-            ],
+            });
+            console.log(items);
+            return items;
           },
         );
       }
@@ -79,9 +84,9 @@ export default function ChatInput(
       return { previousMessages };
     },
     onError: (err, newMessage, context) => {
-      utils.message.list.setData({}, context?.previousMessages);
+      //utils.message.list.setData({}, context?.previousMessages);
     },
-    async onSuccess() {
+    async onSettled() {
       // refetches messages after a post is added
       await utils.message.list.invalidate();
     },

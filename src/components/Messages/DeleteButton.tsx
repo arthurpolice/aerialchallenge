@@ -17,9 +17,10 @@ export default function DeleteButton({ imageUrl, messageId }: Props) {
   const utils = trpc.useContext();
   const removeMessage = trpc.message.delete.useMutation({
     async onSuccess() {
-      // refetches messages after a post is added
+      // refetches messages after a post is removed
       await utils.message.list.invalidate();
       if (imageUrl) {
+        // Delete the image from S3, if it exists
         await fetch(`api/imageDelete?key=${imageUrl}`);
       }
     },

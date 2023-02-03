@@ -12,7 +12,7 @@ interface Message {
 interface Props {
   list: Message[];
 }
-
+// This component is not being used at the moment, haven't deleted it yet because it may be needed
 export default function Messages({ list }: Props) {
   return (
     <>

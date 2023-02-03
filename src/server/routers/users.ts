@@ -1,8 +1,7 @@
 import { router, publicProcedure } from '../trpc';
-import { Prisma } from '../../../prisma/src/generated/client';
 import { PrismaClient } from '../../../prisma/src/generated/client';
 import { TRPCError } from '@trpc/server';
-import { optional, z } from 'zod';
+import { z } from 'zod';
 
 const prisma = new PrismaClient();
 
@@ -16,7 +15,7 @@ export const userRouter = router({
       }),
     )
     .mutation(async ({ input }) => {
-      const response = await prisma.user.create({
+      await prisma.user.create({
         data: input,
       });
     }),
@@ -24,14 +23,12 @@ export const userRouter = router({
     .input(
       z.object({
         username: z.string(),
-        password: z.string(),
       }),
     )
     .query(async ({ input }) => {
       const user = await prisma.user.findFirstOrThrow({
         where: {
           username: input.username,
-          password: input.password,
         },
       });
       return user;

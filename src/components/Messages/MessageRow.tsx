@@ -29,6 +29,8 @@ export default function MessageRow({
   );
   const [preSignedUrl, setPreSignedUrl] = useState<string>('');
 
+  // Messages are only rendered upon receiving a direction from this useEffect (is this acceptable practice?)
+  // If the message is from the user, it shows up on the right, else on the left
   useEffect(() => {
     if (senderId === cookiesId) {
       setDirection('right');
@@ -38,6 +40,7 @@ export default function MessageRow({
     }
   }, [senderId, cookiesId]);
 
+  // This gets the url to display the image in the message
   const getPreSignedUrl = async (key: string | null) => {
     if (key) {
       const apiCall = await fetch(`api/imageGet?key=${key}`);
@@ -46,13 +49,14 @@ export default function MessageRow({
       return url;
     }
   };
+  // Use effect to use the above function upon rendering of the message
   useEffect(() => {
     getPreSignedUrl(message.imageUrl)
       .then((response) => response)
       .then((data) => {
         setPreSignedUrl(data);
       });
-  });
+  }, [message.imageUrl]);
 
   if (direction !== '' && !hasImage) {
     return (

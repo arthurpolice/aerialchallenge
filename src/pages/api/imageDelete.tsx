@@ -9,7 +9,7 @@ const s3 = new S3({
   signatureVersion: 'v4',
 });
 
-export default function attachImage(req: NextApiRequest, res: NextApiResponse) {
+export default function deleteImage(req: NextApiRequest, res: NextApiResponse) {
   const Key = req.query.key as string;
   const Bucket = process.env.BUCKET_NAME;
   if (Bucket) {
@@ -18,14 +18,11 @@ export default function attachImage(req: NextApiRequest, res: NextApiResponse) {
       Key,
     };
 
-    const uploadUrl = s3.deleteObject(s3Params, function (err, data) {
+    s3.deleteObject(s3Params, function (err, data) {
       if (err) console.log(err, err.stack); // error
       else console.log(data); // deleted
     });
 
-    res.status(200).json({
-      uploadUrl,
-      key: Key,
-    });
+    res.status(200);
   }
 }

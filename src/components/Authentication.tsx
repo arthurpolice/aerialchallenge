@@ -16,6 +16,7 @@ import {
 import { trpc } from '~/utils/trpc';
 import { SetStateAction } from 'react';
 import { setCookie } from 'nookies';
+import bcrypt from 'bcryptjs';
 
 interface LoginProps {
   setFunction: React.Dispatch<SetStateAction<string>>;
@@ -60,22 +61,19 @@ export function AuthenticationForm(
         await registerUser.mutateAsync({
           name: values.name,
           username: values.username,
-          password: values.password,
+          password: bcrypt.hashSync(values.password),
         });
-        const user = await utils.user.login.fetch({
-          username: values.username,
-          password: values.password,
-        });
-        user.id ? (id = user.id) : (id = null);
       } catch {
-        console.log('Could not register');
+        throw 'Error: could not register';
       }
-    } else {
-      const user = await utils.user.login.fetch({
-        username: values.username,
-        password: values.password,
-      });
-      user.id ? (id = user.id) : (id = null);
+    }
+    const user = await utils.user.login.fetch({
+      username: values.username,
+    });
+    if (user) {
+      if (bcrypt.compareSync(values.password, user.password)) {
+        id = user.id;
+      }
     }
     if (id) {
       setCookie(null, 'user_id', id, {
