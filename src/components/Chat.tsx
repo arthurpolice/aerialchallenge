@@ -1,4 +1,4 @@
-import React, { SetStateAction } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import { trpc } from '~/utils/trpc';
 import ChatInput from './ChatInput/ChatInput';
 import MessageRow from './Messages/MessageRow';
@@ -11,6 +11,7 @@ export default function ChatPage({
 }: {
   setFunction: React.Dispatch<SetStateAction<string>>;
 }) {
+  const utils = trpc.useContext();
   // Get paginated data from backend
   const messageQuery = trpc.message.list.useInfiniteQuery(
     {
@@ -30,8 +31,13 @@ export default function ChatPage({
   const onScroll = () => {
     getNextPage();
   };
+  const messages = utils.message.list.getInfiniteData({
+    limit: 30,
+    cursor: undefined,
+  });
+
   // This flatmap makes the experience smoother. If messageQuery is used for generating the JSX, it keeps jumping around when the pagination gets triggered. (Don't fully understand why)
-  const flattenedList = messageQuery.data?.pages.flatMap((page) => page.items);
+  const flattenedList = messages?.pages.flatMap((page) => page.items);
   return (
     <>
       <div className={styles.root}>

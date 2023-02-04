@@ -59,8 +59,8 @@ export default function ChatInput(
         limit: 30,
         cursor: undefined,
       });
-      console.log(previousMessages);
       if (previousMessages) {
+        console.log(previousMessages);
         utils.message.list.setInfiniteData(
           {
             limit: 30,
@@ -79,6 +79,7 @@ export default function ChatInput(
                 name: '',
               },
             });
+            console.log(items);
             return items;
           },
         );
@@ -87,7 +88,13 @@ export default function ChatInput(
       return { previousMessages };
     },
     onError: (err, newMessage, context) => {
-      utils.message.list.setInfiniteData({}, context?.previousMessages);
+      if (context?.previousMessages?.pages[0]?.items) {
+        context?.previousMessages?.pages[0]?.items.pop();
+        utils.message.list.setInfiniteData(
+          { limit: 30, cursor: undefined },
+          context.previousMessages,
+        );
+      }
     },
     async onSettled() {
       // refetches messages after a post is added
