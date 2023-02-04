@@ -76,12 +76,9 @@ export default function ChatInput(
               updatedAt: new Date(Date.now()),
               createdBy: {
                 id: userId ? userId : Math.random().toString(),
-                username: Math.random().toString(),
-                password: Math.random().toString(),
                 name: '',
               },
             });
-            console.log(items);
             return items;
           },
         );
@@ -90,7 +87,7 @@ export default function ChatInput(
       return { previousMessages };
     },
     onError: (err, newMessage, context) => {
-      //utils.message.list.setData({}, context?.previousMessages);
+      utils.message.list.setInfiniteData({}, context?.previousMessages);
     },
     async onSettled() {
       // refetches messages after a post is added

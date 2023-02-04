@@ -10,7 +10,12 @@ const defaultMessageSelect = Prisma.validator<Prisma.MessageSelect>()({
   createdAt: true,
   updatedAt: true,
   hasImage: true,
-  createdBy: true,
+  createdBy: {
+    select: {
+      name: true,
+      id: true,
+    },
+  },
   imageUrl: true,
 });
 
