@@ -7,14 +7,15 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { Message } from './types.d';
 import { prisma } from '~/server/prisma';
 
-export default async function ChatPage({
+export default function ChatPage({
   setFunction,
 }: {
   setFunction: React.Dispatch<SetStateAction<string>>;
 }) {
   const utils = trpc.useContext();
-  await prisma.$connect()
   // Get paginated data from backend
+  const connect = async () => await prisma.$connect()
+  connect()
   const messageQuery = trpc.message.list.useInfiniteQuery(
     {
       limit: 30,
