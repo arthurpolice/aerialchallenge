@@ -29,7 +29,3 @@ model Message {
   hasImage Boolean @default(false)
   imageUrl String?
 }
-
-model Beepbeep {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-}
