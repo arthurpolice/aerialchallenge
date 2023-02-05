@@ -7,7 +7,7 @@
     "plugin:prettier/recommended"
   ],
   "parserOptions": {
-    "project": "aerial_challenge/prisma version/aerial_chat/tsconfig.json",
+    "project": "tsconfig.json",
     "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
     "sourceType": "module" // Allows for the use of imports
   },

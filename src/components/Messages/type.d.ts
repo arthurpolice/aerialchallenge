@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 
 /**
@@ -165,7 +166,7 @@ export interface IMessage {
   forwarded: boolean;
   replyButton: boolean;
   removeButton: boolean;
-  status: 'waiting' | 'sent' | 'received' | 'read';
+  status: 'waiting' | 'sent' | 'received' | 'read' | null;
   notch: boolean;
   copiableDate?: boolean;
   retracted: boolean;

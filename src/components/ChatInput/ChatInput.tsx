@@ -23,7 +23,7 @@ import {
   useState,
 } from 'react';
 import { parseCookies } from 'nookies';
-import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 
 interface HookProps {
   setFunction: React.Dispatch<SetStateAction<string>>;
@@ -67,7 +67,8 @@ export default function ChatInput(
             cursor: undefined,
           },
           (items) => {
-            items?.pages[0]?.items.push({
+            const length = items?.pages.length;
+            items?.pages[length ? length - 1 : 0]?.items.push({
               ...newMessage,
               id: Math.random().toString(),
               hasImage: false,
@@ -126,13 +127,14 @@ export default function ChatInput(
       (userId && image)
     ) {
       const imageUrl = await uploadImage();
+      const textToSend = messageRef.current ? messageRef.current.value : '';
+      messageRef.current ? (messageRef.current.value = '') : null;
       await addMessage.mutateAsync({
         hasImage: image ? true : false,
         imageUrl,
-        text: messageRef.current ? messageRef.current.value : '',
+        text: textToSend,
         userId: userId,
       });
-      messageRef.current ? (messageRef.current.value = '') : null;
       setImage(null);
       setOpen(false);
     } else if (!userId) {
@@ -238,7 +240,7 @@ export default function ChatInput(
                 >
                   <EmojiPicker
                     onEmojiClick={emojiClick}
-                    emojiStyle={'native'}
+                    emojiStyle={EmojiStyle.NATIVE}
                     lazyLoadEmojis={true}
                   />
                 </div>

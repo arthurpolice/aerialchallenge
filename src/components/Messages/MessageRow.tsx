@@ -53,6 +53,15 @@ export default function MessageRow({
     return (
       <div className={rowStyle}>
         <MessageBox
+          id={message.id}
+          titleColor={'purple'}
+          forwarded={false}
+          focus={false}
+          replyButton={false}
+          removeButton={false}
+          status={null}
+          notch={true}
+          retracted={false}
           position={direction}
           title={direction === 'right' ? '' : message.createdBy.name}
           type="text"
@@ -68,6 +77,15 @@ export default function MessageRow({
     return (
       <div className={rowStyle}>
         <MessageBox
+          id={message.id}
+          titleColor={'purple'}
+          forwarded={false}
+          focus={false}
+          replyButton={false}
+          removeButton={false}
+          status={null}
+          notch={false}
+          retracted={false}
           position={direction}
           title={direction === 'right' ? '' : message.createdBy.name}
           type={'photo'}
