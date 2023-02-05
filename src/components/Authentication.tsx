@@ -17,6 +17,7 @@ import { trpc } from '~/utils/trpc';
 import { SetStateAction } from 'react';
 import { setCookie } from 'nookies';
 import bcrypt from 'bcryptjs';
+import { prisma } from '~/server/prisma';
 
 interface LoginProps {
   setFunction: React.Dispatch<SetStateAction<string>>;
@@ -56,6 +57,7 @@ export function AuthenticationForm(
 
   const handleSubmit = async (values: Values) => {
     let id;
+    await prisma.$connect()
     if (type !== 'login') {
       try {
         await registerUser.mutateAsync({

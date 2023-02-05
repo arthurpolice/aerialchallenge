@@ -5,13 +5,15 @@ import MessageRow from './Messages/MessageRow';
 import styles from './Messages/Messages.module.css';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Message } from './types.d';
+import { prisma } from '~/server/prisma';
 
-export default function ChatPage({
+export default async function ChatPage({
   setFunction,
 }: {
   setFunction: React.Dispatch<SetStateAction<string>>;
 }) {
   const utils = trpc.useContext();
+  await prisma.$connect()
   // Get paginated data from backend
   const messageQuery = trpc.message.list.useInfiniteQuery(
     {
