@@ -24,14 +24,14 @@ import {
 } from 'react';
 import { parseCookies } from 'nookies';
 import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
-import { prisma } from '~/server/prisma';
 
 interface HookProps {
   setFunction: React.Dispatch<SetStateAction<string>>;
+  setUpdate: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export default function ChatInput(
-  { setFunction }: HookProps,
+  { setFunction, setUpdate }: HookProps,
   props: TextInputProps,
 ): JSX.Element {
   // State
@@ -61,7 +61,6 @@ export default function ChatInput(
         cursor: undefined,
       });
       if (previousMessages) {
-        console.log(previousMessages);
         utils.message.list.setInfiniteData(
           {
             limit: 30,
@@ -81,12 +80,11 @@ export default function ChatInput(
                 name: '',
               },
             });
-            console.log(items);
             return items;
           },
         );
       }
-
+      setUpdate((previous) => !previous)
       return { previousMessages };
     },
     onError: (err, newMessage, context) => {
