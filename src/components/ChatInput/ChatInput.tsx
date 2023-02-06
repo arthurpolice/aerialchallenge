@@ -130,7 +130,6 @@ export default function ChatInput(
       const imageUrl = await uploadImage();
       const textToSend = messageRef.current ? messageRef.current.value : '';
       messageRef.current ? (messageRef.current.value = '') : null;
-      await prisma.$connect()
       await addMessage.mutateAsync({
         hasImage: image ? true : false,
         imageUrl,

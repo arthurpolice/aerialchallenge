@@ -14,8 +14,6 @@ export default function ChatPage({
 }) {
   const utils = trpc.useContext();
   // Get paginated data from backend
-  const connect = async () => await prisma.$connect()
-  connect()
   const messageQuery = trpc.message.list.useInfiniteQuery(
     {
       limit: 30,

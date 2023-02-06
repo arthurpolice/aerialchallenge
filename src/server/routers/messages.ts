@@ -3,6 +3,7 @@ import { Prisma } from '../../../prisma/src/generated/client';
 import { PrismaClient } from '../../../prisma/src/generated/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
+import { prisma } from '../prisma';
 
 const defaultMessageSelect = Prisma.validator<Prisma.MessageSelect>()({
   id: true,
@@ -18,8 +19,6 @@ const defaultMessageSelect = Prisma.validator<Prisma.MessageSelect>()({
   },
   imageUrl: true,
 });
-
-const prisma = new PrismaClient();
 
 export const msgRouter = router({
   list: publicProcedure

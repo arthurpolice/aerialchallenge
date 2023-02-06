@@ -8,7 +8,7 @@ const { z } = require('zod');
 
 /*eslint sort-keys: "error"*/
 const envSchema = z.object({
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: z.string(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
 });
 
@@ -19,6 +19,7 @@ if (!env.success) {
     '❌ Invalid environment variables:',
     JSON.stringify(env.error.format(), null, 4),
   );
+  console.log(process)
   process.exit(1);
 }
 module.exports.env = env.data;
