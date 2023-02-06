@@ -98,7 +98,10 @@ export default function ChatInput(
     },
     async onSettled() {
       // refetches messages after a post is added
-      await utils.message.list.invalidate();
+      await utils.message.list.invalidate({
+        limit:30,
+        cursor: undefined
+      });
     },
   });
   const uploadImage = async () => {

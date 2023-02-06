@@ -38,7 +38,7 @@ export default function ChatPage({
     cursor: undefined,
   });
   // This flatmap makes the experience smoother. If messageQuery is used for generating the JSX, it keeps jumping around when the pagination gets triggered. (Don't fully understand why)
-  const flattenedList = messageQuery.data?.pages.flatMap((page) => page.items);
+  const flattenedList = messages?.pages.flatMap((page) => page.items);
   // A little hacky but was the only way I found to make flattened list re-render. Not sure why.
   const refresher = messageQuery.data?.pages.length;
   return (
