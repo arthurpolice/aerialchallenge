@@ -19,7 +19,7 @@ if (!env.success) {
     '❌ Invalid environment variables:',
     JSON.stringify(env.error.format(), null, 4),
   );
-  console.log(process)
+  console.log(process);
   process.exit(1);
 }
 module.exports.env = env.data;

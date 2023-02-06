@@ -4,7 +4,7 @@ import { PrismaClient } from '../../../prisma/src/generated/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const defaultMessageSelect = Prisma.validator<Prisma.MessageSelect>()({
   id: true,
