@@ -23,7 +23,10 @@ export default function ChatPage({
       getPreviousPageParam(lastPage) {
         return lastPage.nextCursor;
       },
+      staleTime: Infinity,
+      refetchOnWindowFocus: 'always'
     },
+    
   );
 
   const getNextPage = async () => {
