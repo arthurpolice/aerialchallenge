@@ -23,8 +23,7 @@ export default function ChatPage({
       getPreviousPageParam(lastPage) {
         return lastPage.nextCursor;
       },
-      staleTime: Infinity,
-      refetchOnWindowFocus: 'always'
+      refetchInterval: 1000
     },
     
   );
