@@ -197,6 +197,7 @@ export default function ChatInput(
           size="sm"
           disabled={loggedIn ? false : true}
           ref={messageRef}
+          onKeyDown={(e) => e.code==='Enter'?handleSubmit():null}
           rightSection={
             <div className={styles.buttons}>
               <input
