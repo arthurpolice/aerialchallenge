@@ -117,7 +117,7 @@ export function AuthenticationForm(
             onChange={(event) =>
               form.setFieldValue('username', event.currentTarget.value)
             }
-            error={form.errors.username && 'Username should include at least 6 characters'}
+            error={form.errors.username?form.errors.username:usernameError}
           />
 
           <PasswordInput
@@ -129,8 +129,7 @@ export function AuthenticationForm(
               form.setFieldValue('password', event.currentTarget.value)
             }
             error={
-              form.errors.password &&
-              'Password should include at least 8 characters'
+              form.errors.password
             }
           />
         </Stack>
