@@ -34,6 +34,11 @@
     padding-bottom: 0;
     gap: 0;
   }
+  .navbarShow>div {
+    animation-name: fadeIn;
+    animation-fill-mode: forwards;
+    animation-duration: 300ms;
+  }
   .collapseButton {
     display: block;
   }
