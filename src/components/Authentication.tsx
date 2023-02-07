@@ -14,7 +14,7 @@ import {
   Stack,
 } from '@mantine/core';
 import { trpc } from '~/utils/trpc';
-import { SetStateAction } from 'react';
+import { SetStateAction, useState } from 'react';
 import { setCookie } from 'nookies';
 import bcrypt from 'bcryptjs';
 
@@ -26,7 +26,12 @@ export function AuthenticationForm(
   { setFunction }: LoginProps,
   props: PaperProps,
 ) {
-  const registerUser = trpc.user.register.useMutation();
+  const [usernameError, setUsernameError] = useState<null | string>(null)
+  const registerUser = trpc.user.register.useMutation({
+    onError(err) {
+      setUsernameError("This username is taken.")
+    },
+  });
   const utils = trpc.useContext();
 
   const [type, toggle] = useToggle(['login', 'register']);
@@ -35,15 +40,17 @@ export function AuthenticationForm(
       username: '',
       name: '',
       password: '',
-      terms: true,
     },
     // Fix the terms validation
     validate: {
+      username: (val) =>
+      val.length <= 6
+        ? 'Username should include at least 6 characters'
+        : null,
       password: (val) =>
-        val.length <= 6
-          ? 'Password should include at least 6 characters'
+        val.length <= 8
+          ? 'Password should include at least 8 characters'
           : null,
-      terms: (val) => (val ? null : 'You must agree to the terms of service'),
     },
   });
 
@@ -51,29 +58,23 @@ export function AuthenticationForm(
     username: string;
     name: string;
     password: string;
-    terms?: boolean;
   }
 
   const handleSubmit = async (values: Values) => {
     let id;
     if (type !== 'login') {
-      try {
-        await registerUser.mutateAsync({
-          name: values.name,
-          username: values.username,
-          password: bcrypt.hashSync(values.password),
-        });
-      } catch {
-        throw 'Error: could not register';
-      }
+      await registerUser.mutateAsync({
+        name: values.name,
+        username: values.username,
+        password: bcrypt.hashSync(values.password),
+      });
     }
-    const user = await utils.user.login.fetch({
+    const fetchId = await utils.user.login.fetch({
       username: values.username,
+      password: values.password,
     });
-    if (user) {
-      if (bcrypt.compareSync(values.password, user.password)) {
-        id = user.id;
-      }
+    if (fetchId) {
+      id = fetchId;
     }
     if (id) {
       setCookie(null, 'user_id', id, {
@@ -99,6 +100,7 @@ export function AuthenticationForm(
           {type === 'register' && (
             <TextInput
               required
+              error={usernameError}
               label="Name"
               placeholder="Your name"
               value={form.values.name}
@@ -132,16 +134,6 @@ export function AuthenticationForm(
               'Password should include at least 6 characters'
             }
           />
-
-          {type === 'register' && (
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              onChange={(event) =>
-                form.setFieldValue('terms', event.currentTarget.checked)
-              }
-            />
-          )}
         </Stack>
 
         <Group position="apart" mt="xl">

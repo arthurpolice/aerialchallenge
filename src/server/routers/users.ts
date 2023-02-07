@@ -2,6 +2,7 @@ import { router, publicProcedure } from '../trpc';
 import { PrismaClient } from '../../../prisma/src/generated/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
+import { compareSync } from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -22,15 +23,19 @@ export const userRouter = router({
   login: publicProcedure
     .input(
       z.object({
-        username: z.string(),
+        username: z.string().min(6),
+        password: z.string().min(8),
       }),
     )
     .query(async ({ input }) => {
-      const user = await prisma.user.findFirstOrThrow({
+      const user = await prisma.user.findFirst({
         where: {
           username: input.username,
         },
       });
-      return user;
+      if (user && compareSync(input.password, user.password)) {
+        return user.id
+      }
+      return "mistakes were made"
     }),
 });
