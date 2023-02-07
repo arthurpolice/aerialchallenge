@@ -108,7 +108,6 @@ export function AuthenticationForm(
               }
             />
           )}
-          <div>{usernameError}</div>
           <TextInput
             required
             label="Username"
