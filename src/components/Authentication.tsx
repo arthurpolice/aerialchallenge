@@ -9,7 +9,6 @@ import {
   PaperProps,
   Button,
   Divider,
-  Checkbox,
   Anchor,
   Stack,
 } from '@mantine/core';
@@ -26,10 +25,10 @@ export function AuthenticationForm(
   { setFunction }: LoginProps,
   props: PaperProps,
 ) {
-  const [usernameError, setUsernameError] = useState<null | string>(null)
+  const [usernameError, setUsernameError] = useState<null | string>(null);
   const registerUser = trpc.user.register.useMutation({
-    onError(err) {
-      setUsernameError("This username is taken.")
+    onError() {
+      setUsernameError('This username is taken.');
     },
   });
   const utils = trpc.useContext();
@@ -44,9 +43,9 @@ export function AuthenticationForm(
     // Fix the terms validation
     validate: {
       username: (val) =>
-      val.length <= 6
-        ? 'Username should include at least 6 characters'
-        : null,
+        val.length <= 6
+          ? 'Username should include at least 6 characters'
+          : null,
       password: (val) =>
         val.length <= 8
           ? 'Password should include at least 8 characters'
@@ -116,7 +115,7 @@ export function AuthenticationForm(
             onChange={(event) =>
               form.setFieldValue('username', event.currentTarget.value)
             }
-            error={form.errors.username?form.errors.username:usernameError}
+            error={form.errors.username ? form.errors.username : usernameError}
           />
 
           <PasswordInput
@@ -127,9 +126,7 @@ export function AuthenticationForm(
             onChange={(event) =>
               form.setFieldValue('password', event.currentTarget.value)
             }
-            error={
-              form.errors.password
-            }
+            error={form.errors.password}
           />
         </Stack>
 

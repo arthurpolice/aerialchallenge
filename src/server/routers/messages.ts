@@ -1,7 +1,6 @@
 import { router, publicProcedure } from '../trpc';
 import { Prisma } from '../../../prisma/src/generated/client';
 import { PrismaClient } from '../../../prisma/src/generated/client';
-import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 const prisma = new PrismaClient();

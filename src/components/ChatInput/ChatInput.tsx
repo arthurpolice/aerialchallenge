@@ -84,7 +84,7 @@ export default function ChatInput(
           },
         );
       }
-      setUpdate((previous) => !previous)
+      setUpdate((previous) => !previous);
       return { previousMessages };
     },
     onError: (err, newMessage, context) => {
@@ -197,7 +197,7 @@ export default function ChatInput(
           size="sm"
           disabled={loggedIn ? false : true}
           ref={messageRef}
-          onKeyDown={(e) => e.code==='Enter'?handleSubmit():null}
+          onKeyDown={(e) => (e.code === 'Enter' ? handleSubmit() : null)}
           rightSection={
             <div className={styles.buttons}>
               <input
