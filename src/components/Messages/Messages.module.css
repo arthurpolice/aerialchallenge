@@ -51,11 +51,13 @@
 }
 
 @media screen and (max-width: 900px) {
+  .root {
+    padding-top: 75px;
+  }
   .main {
     width: 100vw;
   }
 }
-
 .deleteButton {
   float: right;
   opacity: 0%;
