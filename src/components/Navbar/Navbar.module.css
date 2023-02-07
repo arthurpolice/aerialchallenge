@@ -1,6 +1,7 @@
 .navbar {
   position: absolute;
   gap: 100px;
+  height: 100%;
 }
 
 .navbarShow {
