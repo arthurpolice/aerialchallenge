@@ -100,7 +100,6 @@ export function AuthenticationForm(
           {type === 'register' && (
             <TextInput
               required
-              error={usernameError}
               label="Name"
               placeholder="Your name"
               value={form.values.name}
@@ -109,7 +108,7 @@ export function AuthenticationForm(
               }
             />
           )}
-
+          <div>{usernameError}</div>
           <TextInput
             required
             label="Username"
@@ -118,7 +117,7 @@ export function AuthenticationForm(
             onChange={(event) =>
               form.setFieldValue('username', event.currentTarget.value)
             }
-            error={form.errors.username && 'Invalid username'}
+            error={form.errors.username && 'Username should include at least 6 characters'}
           />
 
           <PasswordInput
@@ -131,7 +130,7 @@ export function AuthenticationForm(
             }
             error={
               form.errors.password &&
-              'Password should include at least 6 characters'
+              'Password should include at least 8 characters'
             }
           />
         </Stack>
