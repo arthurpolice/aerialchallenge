@@ -42,6 +42,9 @@
   .collapseButton {
     display: block;
   }
+  .collapseButton>span>button {
+    background-color: #f8f9fa;
+  }
 }
 
 @keyframes slide {

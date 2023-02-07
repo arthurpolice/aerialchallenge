@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
 import '../styles/MessageBox.css';
 import '../styles/PhotoMessage.css';
+import '../styles/styles.css';
 
 const MyApp = (props: AppProps) => {
   const { Component, pageProps } = props;
