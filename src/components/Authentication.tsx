@@ -82,7 +82,6 @@ export function AuthenticationForm(
       setFunction('chat');
     } else {
       setUsernameError("Username and password don't match.");
-      form.errors.password = "Username and password don't match.";
     }
   };
   return (
