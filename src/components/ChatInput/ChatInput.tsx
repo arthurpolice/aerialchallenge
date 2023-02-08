@@ -194,6 +194,7 @@ export default function ChatInput(
         <TextInput
           className={styles.input}
           radius="xl"
+          autoComplete="false"
           size="sm"
           disabled={loggedIn ? false : true}
           ref={messageRef}
