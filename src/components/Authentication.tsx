@@ -80,6 +80,8 @@ export function AuthenticationForm(
         maxAge: 24 * 60 * 60,
       });
       setFunction('chat');
+    } else {
+      setUsernameError("Account name and password don't match");
     }
   };
   return (
