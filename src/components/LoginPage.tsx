@@ -5,6 +5,7 @@ import React, { SetStateAction } from 'react';
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
+    height: '100%',
     backgroundSize: 'cover',
     backgroundImage:
       'url(https://images.unsplash.com/27/flock.jpg?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80)',
@@ -20,6 +21,7 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    height: '100%',
 
     [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
       maxWidth: '100%',
