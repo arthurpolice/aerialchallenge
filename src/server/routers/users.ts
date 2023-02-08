@@ -34,8 +34,8 @@ export const userRouter = router({
         },
       });
       if (user && compareSync(input.password, user.password)) {
-        return user.id
+        return user.id;
       }
-      return "mistakes were made"
+      return null;
     }),
 });
